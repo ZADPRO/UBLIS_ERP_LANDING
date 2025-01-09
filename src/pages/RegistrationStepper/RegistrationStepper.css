@@ -1,0 +1,192 @@
+.swal-title {
+  font-size: 24px; /* Adjust the font size for the title */
+  color: #f95005; /* Custom color */
+}
+
+.swal-text {
+  font-size: 20px; /* Adjust the font size for the content text */
+  text-align: center; /* Center the text */
+}
+
+.swal-button {
+  background-color: #ff5001 !important; /* Custom button color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
+  /* box-shadow: 0 0 0 0.2rem #c7d2fe00; */
+  box-shadow: none;
+}
+
+.p-calendar.p-focus {
+  border: 2px solid #f95005; /* Add your focus border style here */
+  border-radius: 5px; /* Ensure consistent rounding if needed */
+}
+
+.p-calendar .p-inputtext {
+  outline: none; /* Ensure no outline on the inner input */
+}
+
+.p-datepicker:not(.p-datepicker-inline) .p-datepicker-header {
+  background-color: #f95005;
+  color: white;
+  font-weight: bolder;
+}
+
+.p-datepicker:not(.p-disabled)
+  table
+  td
+  span:not(.p-highlight):not(.p-disabled):focus {
+  background: #f95005 !important;
+  color: white;
+  border-color: none !important;
+  box-shadow: 0 0 0 0.2rem #f95005;
+}
+.p-datepicker:not(.p-disabled)
+  table
+  td
+  span:not(.p-highlight):not(.p-disabled):hover {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #f95005 !important;
+  border-color: #f95005 !important;
+}
+
+.p-datepicker table td.p-datepicker-today > span {
+  background: #f95005 !important;
+  color: white;
+  border-color: none !important;
+  box-shadow: none;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-yearpicker
+  .p-yearpicker-year:not(.p-disabled):not(.p-highlight):hover {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #f95005 !important;
+  border-color: #f95005 !important;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-yearpicker
+  .p-yearpicker-year:not(.p-disabled):focus {
+  background: #f95005 !important;
+  color: white;
+  border-color: none !important;
+  box-shadow: none;
+}
+
+.p-yearpicker-year {
+  width: 45%;
+  align-content: space-around;
+  margin: 1%;
+  margin-left: 2.5%;
+  margin-right: 2.5;
+  border-color: none !important;
+  box-shadow: none;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-monthpicker
+  .p-monthpicker-month:not(.p-disabled):not(.p-highlight):focus {
+  background: #f95005;
+  color: white;
+  border-color: none !important;
+  box-shadow: none;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-monthpicker
+  .p-monthpicker-month:not(.p-disabled):not(.p-highlight):hover {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #f95005 !important;
+  border-color: #f95005 !important;
+}
+
+.p-monthpicker-month {
+  width: 30%;
+  margin: 1%;
+
+  margin-left: 1.5%;
+  margin-right: 1.5%;
+}
+
+.p-datepicker table td > span.p-highlight {
+  background: #f95005 !important;
+  color: white;
+  border-color: none !important;
+  box-shadow: none;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-yearpicker
+  .p-yearpicker-year:not(.p-disabled):focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+  border-color: none !important;
+}
+
+.p-datepicker:not(.p-disabled)
+  .p-monthpicker
+  .p-monthpicker-month:not(.p-disabled):focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+  border-color: none !important;
+
+  color: #4b5563;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
+  color: #ffffff !important;
+  background: #f95005;
+  box-shadow: none;
+  border-color: none !important;
+}
+
+.p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+  color: white;
+  background: #f95005;
+  box-shadow: none;
+  border-color: none !important;
+}
+.p-fileupload.p-fileupload-advanced.p-component {
+  width: 60%;
+}
+[data-pc-section="details"] {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+.p-fileupload-file-badge.p-badge.p-component.p-badge-warning {
+  margin-top: 0%;
+}
+
+.uploadfile::file-selector-button {
+  border: none;
+  background-color: #f95005;
+  color: white;
+  padding: 2px;
+  border-radius: 6px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.documentView {
+  z-index: 999;
+  background-color: red;
+  width: 70vw;
+  height: 80vh;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+  background-color: #f95005 !important ;
+}
