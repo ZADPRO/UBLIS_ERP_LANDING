@@ -16,6 +16,7 @@ import { ImUpload2 } from "react-icons/im";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { Calendar } from "primereact/calendar";
+import RadiobuttonInput from "../Inputs/RadiobuttonInput";
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
@@ -90,6 +91,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     doctorname: "",
     hospitalname: "",
     painscale: "",
+    bpValue: "",
     painscaleValue: "",
     duration: "",
     past: "",
@@ -119,7 +121,34 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     return JSON.parse(decryptedString);
   };
 
+  // CHANGES BY THIRU
+  const [selectedValue, setSelectedValue] = useState(null); // No default selection
   const [stepperactive, setStepperactive] = useState(1);
+  const [nextStepperValue, setNextStepperValue] = useState(null); // Store nextStepperValue in state
+  const [newStepperValue, setNewStepperValue] = useState(null)
+
+
+  const handleRadioChange = (event) => {
+    const value = event.target.value;
+    setSelectedValue(value); // Update the selected value
+
+    // Determine the next stepper value based on the radio button selection
+    if (value === 'first') {
+      console.log(3); // Log 3 if the first radio is selected
+      setNextStepperValue(3); // Update the nextStepperValue
+    } else if (value === 'second') {
+      console.log(6); // Log 6 if the second radio is selected
+      setNextStepperValue(6); // Update the nextStepperValue
+    }
+  };
+
+  // useEffect to listen for changes in nextStepperValue
+  useEffect(() => {
+    if (nextStepperValue !== null) {
+      setNewStepperValue(nextStepperValue);
+    }
+  }, [newStepperValue]); 
+
 
   const handleNext = () => {
     setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
@@ -322,6 +351,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     breaks: "",
     care: "",
     backpain: "",
+    bp: "",
   });
 
   const [branchList, setBranchList] = useState([]);
@@ -542,6 +572,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   }
 
   const handleInput = (e) => {
+    console.log("e", e);
     const { name, value } = e.target;
     console.log("value", value);
     console.log("name", name);
@@ -618,7 +649,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           if (data.token == false) {
             navigate("/expired");
           }
-          console.log("Member List -----------", data);
+          console.log(" -----------", data);
           // setpreferTiming(data.SectionTime);
           setSessionType(data.SectionTime);
         })
@@ -777,7 +808,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           refWeight: parseInt(inputs.weight),
           refBlood: inputs.bloodgroup,
           refBMI: inputs.bmi,
-          refBP: inputs.bp,
+
           refRecentInjuries: selectedOption.accident === "yes" ? true : false,
           refRecentInjuriesReason: inputs.injuries,
           refRecentFractures: selectedOption.breaks === "yes" ? true : false,
@@ -792,8 +823,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           refHospital: inputs.hospitalname,
           refBackPain:
             selectedOption.backpain === "no" ? "No" : inputs.painscale,
-          refBackPainValue:
-            selectedOption.backpain === "no" ? "No" : inputs.painscaleValue,
+          refBP: selectedOption.bp === "no" ? "No" : inputs.bp,
+
+          refbpValue: selectedOption.bp === "no" ? "No" : inputs.bpValue,
           refProblem: inputs.duration,
           refPastHistory: inputs.past,
           refFamilyHistory: inputs.family,
@@ -866,6 +898,15 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
+
+  // const handleMedicalIssueChange = (value) => {
+  //   if (value === "yes") {
+  //     setStepperactive((prevStep) => prevStep + 1); // Go to the next step
+  //   } else if (value === "no") {
+  //     // setStepperactive(5); // Directly set stepperActive to 5
+  //     setStepperactive((prevStep) => prevStep + 3)
+  //   }
+  // };
 
   return (
     <div className="w-[100%] lg:w-[100%] h-[100vh] bg-black/80 blur-[0.2px]  flex justify-center items-center fixed z-50">
@@ -1040,7 +1081,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       label="Date of Birth *"
                       className="relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput"
                       value={inputs.dob}
-                      onChange={(e) => handleInput(e.value)}
+                      onChange={(e) => {
+                        console.log("e data-----------------", e);
+                        handleInput(e);
+                      }}
                       name="dob"
                       dateFormat="dd/mm/yy" // Set the date format here
                       showIcon // Optional: Adds a calendar icon to the input field
@@ -1133,10 +1177,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                         inputs.maritalstatus === "married" ? false : true
                       }
                       className={`bg-[#fff] text-[#ff621b] -mb-[15px] z-50 w-[150px] ml-[10px] 
-                        ${
-                          inputs.maritalstatus === "married"
-                            ? ""
-                            : "text-[#79879b]"
+                        ${inputs.maritalstatus === "married"
+                          ? ""
+                          : "text-[#79879b]"
                         }`}
                     >
                       &nbsp; Anniversary Date *
@@ -1144,11 +1187,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
                     <Calendar
                       label="Anniversary Date"
-                      className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput ${
-                        inputs.maritalstatus === "married"
-                          ? ""
-                          : "cursor-not-allowed"
-                      }`}
+                      className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput ${inputs.maritalstatus === "married"
+                        ? ""
+                        : "cursor-not-allowed"
+                        }`}
                       // className="relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput"
                       value={inputs.anniversarydate}
                       onChange={(e) => handleInput(e)}
@@ -1239,9 +1281,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="text"
                       name="occupation"
                       placeholder="your name"
-                      label="Occupation"
-                      // required
-                      disabled={inputs.age > 18 ? false : true}
+                      label="Occupation *"
+                      required
+                      disabled={inputs.age > 20 ? false : true}
                       value={inputs.occupation}
                       onChange={(e) => handleInput(e)}
                     />
@@ -1603,7 +1645,18 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
+                // setStepperactive((prev) => (prev < 3 ? prev + 1 : prev));
+                // const nextValue = nextStepperValue !== undefined ? nextStepperValue : (prev < 3 ? prev + 1 : prev);
+                // console.log('nextStepperValue', nextStepperValue)
+                // console.log('nextValue', nextValue)
+                console.log('nextStepperValue', selectedValue)
+                if(selectedValue === "second"){
+                  setStepperactive(6)
+                }
+                if(selectedValue === "first"){
+                  setStepperactive(3)
+                }
+                // setStepperactive(nextStepperValue);
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -1689,157 +1742,14 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     />
                   </div>
                 </div>
-
-                <div className="w-[90%] mb-[20px]" align="start">
-                  <TextInput
-                    id="bp"
-                    type="tel"
-                    name="bp"
-                    placeholder="your name"
-                    label="BP"
-                    value={inputs.bp}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
-
-                {/* <div className="w-[90%]" align="start">
-                  <div>
-                    <TextLabel
-                      label={"Recent injuries / Accidents / Operations *"}
-                    />
-                  </div>
-                  <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
-                    <RadioButton
-                      id="accidentyes"
-                      value="yes"
-                      name="accident"
-                      selectedOption={selectedOption.accident || ""}
-                      onChange={(e) => {
-                        setSelectedOption({
-                          ...selectedOption,
-                          accident: e.target.value,
-                        });
-                      }}
-                      label="Yes"
-                      required
-                    />
-                    <RadioButton
-                      id="accidentno"
-                      value="no"
-                      name="accident"
-                      selectedOption={selectedOption.accident || ""}
-                      onChange={(e) => {
-                        setSelectedOption({
-                          ...selectedOption,
-                          accident: e.target.value,
-                        });
-                      }}
-                      label="No"
-                      required
-                    />
-                  </div>
-                  <div className="mb-[20px]">
-                    <TextInput
-                      id="accidentdetail"
-                      type="text"
-                      name="injuries"
-                      placeholder="your name"
-                      label="Details"
-                      value={inputs.injuries}
-                      onChange={(e) => handleInput(e)}
-                      disabled={
-                        selectedOption.accident === "yes" ? false : true
-                      }
-                    />
-                  </div>
-                </div> */}
-
-                <div className="w-[90%]" align="start">
-                  <div>
-                    <TextLabel
-                      label={
-                        "Recent Injuries / Accidents / Surgeries / Fractures / Sprains *"
-                      }
-                    />
-                  </div>
-                  <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
-                    <RadioButton
-                      id="breaksyes"
-                      value="yes"
-                      name="breaks"
-                      selectedOption={selectedOption.breaks || ""}
-                      onChange={(e) => {
-                        setSelectedOption({
-                          ...selectedOption,
-                          breaks: e.target.value,
-                        });
-                      }}
-                      label="Yes"
-                      required
-                    />
-                    <RadioButton
-                      id="breaksno"
-                      value="no"
-                      name="breaks"
-                      selectedOption={selectedOption.breaks || ""}
-                      onChange={(e) => {
-                        setSelectedOption({
-                          ...selectedOption,
-                          breaks: e.target.value,
-                        });
-                      }}
-                      label="No"
-                      required
-                    />
-                  </div>
-                  <div className="mb-[20px]">
-                    <TextInput
-                      id="breaksdetail"
-                      type="text"
-                      name="breaks"
-                      placeholder="your name"
-                      label="Description"
-                      disabled={selectedOption.breaks === "yes" ? false : true}
-                      value={inputs.breaks}
-                      onChange={(e) => handleInput(e)}
-                      maxLength={500} // Sets the character limit to 100
-                    />
-                  </div>
-                </div>
-
-                {/* <div className="w-[90%] mb-[20px]">
-                  <div className="w-full">
-                    <TextInput
-                      id="otheractivities"
-                      type="text"
-                      name="activities"
-                      placeholder="your name"
-                      label="Other Activities"
-                      disabled={selectedOption.breaks === "yes" ? false : true}
-                      value={inputs.activities}
-                      onChange={(e) => handleInput(e)}
-                      maxLength={500}
-                    />
-                  </div>
-                </div> */}
-
-                <div className="w-[90%] mb-[20px]">
-                  <div className="w-full">
-                    <TextInput
-                      id="anythingelse"
-                      type="text"
-                      name="anthingelse"
-                      placeholder="your name"
-                      label="Add your Comments"
-                      disabled={selectedOption.breaks === "yes" ? false : true}
-                      value={inputs.anthingelse}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
+                <div>
+                  <h1 className="text-[18px] mt-4  font-semibold text-[#ff5001] mb-4">
+                    Packages
+                  </h1>
                 </div>
 
                 <div className="w-[90%] flex justify-between mb-[20px]">
-                  <div className="w-[30%]">
+                  <div className="w-[48%]">
                     <SelectInput
                       id="branch"
                       name="branch"
@@ -1852,11 +1762,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       }}
                     />
                   </div>
-                  <div className="w-[18%]">
+
+                  <div className="w-[48%]">
                     <SelectInput
                       id="memberlist"
                       name="memberlist"
-                      label="Member List *"
+                      label="Batch *"
                       required
                       options={memberlistOptions}
                       value={inputs.memberlist}
@@ -1866,7 +1777,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       disabled={packageSelect > 0 ? false : true}
                     />
                   </div>
-                  <div className="w-[18%]">
+                </div>
+                <div
+                  className="w-[90%] mb-[20px] flex justify-between"
+                  align="start"
+                >
+                  <div className="w-[48%]">
                     <SelectInput
                       id="classtype"
                       name="classtype"
@@ -1883,7 +1799,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       }}
                     />
                   </div>
-                  <div className="w-[30%]">
+                  <div className="w-[48%]">
                     <SelectInput
                       id="sessiontype"
                       name="sessiontype"
@@ -1901,7 +1817,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 </div>
 
                 <div className="w-[90%] flex justify-between mb-[20px]">
-                  <div className="w-[32%]">
+                  <div className="w-[100%]">
                     <SelectInput
                       id="memberlist"
                       name="preferabletiming"
@@ -1915,11 +1831,15 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       }}
                     />
                   </div>
-                  <div className="flex flex-col w-[32%] -mt-[13px]">
+                </div>
+                <div
+                  className="w-[90%] mb-[20px] flex justify-between"
+                  align="start"
+                >
+                  <div className="flex flex-col w-[48%] -mt-[13px]">
                     <label
-                      className={`bg-[#fff] ${
-                        packageSelect > 4 ? "text-[#ff621b]" : "text-[#a4b0c2]"
-                      } -mb-[15px] z-50 w-[130px] ml-[10px]`}
+                      className={`bg-[#fff] ${packageSelect > 4 ? "text-[#ff621b]" : "text-[#a4b0c2]"
+                        } -mb-[15px] z-50 w-[130px] ml-[10px]`}
                     >
                       &nbsp;Starting Month *
                     </label>
@@ -1927,10 +1847,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     <Calendar
                       label="Starting Month *"
                       className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
-                        ${
-                          packageSelect > 4
-                            ? "border-[#ff621b] text-[#4c4c4e]"
-                            : "border-[#a4b0c2] text-[#a4b0c2]"
+                        ${packageSelect > 4
+                          ? "border-[#ff621b] text-[#4c4c4e]"
+                          : "border-[#a4b0c2] text-[#a4b0c2]"
                         } autofill:bg-white dateInput`}
                       readOnlyInput
                       dateFormat="mm/yy"
@@ -1943,11 +1862,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       }}
                     />
                   </div>
-                  <div className="flex flex-col w-[32%] -mt-[13px]">
+                  <div className="flex flex-col w-[48%] -mt-[13px]">
                     <label
-                      className={`bg-[#fff] ${
-                        packageSelect > 5 ? "text-[#ff621b]" : "text-[#a4b0c2]"
-                      } -mb-[15px] z-50 w-[130px] ml-[10px]`}
+                      className={`bg-[#fff] ${packageSelect > 5 ? "text-[#ff621b]" : "text-[#a4b0c2]"
+                        } -mb-[15px] z-50 w-[130px] ml-[10px]`}
                     >
                       &nbsp; Ending Month *
                     </label>
@@ -1955,10 +1873,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     <Calendar
                       label="Ending Month"
                       className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
-                        ${
-                          packageSelect > 5
-                            ? "border-[#ff621b] text-[#4c4c4e]"
-                            : "border-[#a4b0c2] text-[#a4b0c2]"
+                        ${packageSelect > 5
+                          ? "border-[#ff621b] text-[#4c4c4e]"
+                          : "border-[#a4b0c2] text-[#a4b0c2]"
                         } autofill:bg-white dateInput`}
                       readOnlyInput
                       dateFormat="mm/yy"
@@ -1986,6 +1903,33 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 ) : (
                   <></>
                 )}
+                <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
+                  Medical Issues *
+                </label>
+                <div className="w-[100%] flex justify-start mt-[10px]">
+                  <div className="mr-10">
+                    <input
+                      type="radio"
+                      id="firstOption"
+                      name="selection"
+                      value="Yes"
+                      onChange={handleRadioChange}
+                      checked={selectedValue === 'first'} // Only check if selected
+                    />
+                    <label htmlFor="firstOption">First Option</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="secondOption"
+                      name="selection"
+                      value="No"
+                      onChange={handleRadioChange}
+                      checked={selectedValue === 'second'} // Only check if selected
+                    />
+                    <label htmlFor="secondOption">Second Option</label>
+                  </div>
+                </div>
               </div>
               <hr />
               <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
@@ -2000,7 +1944,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 <button
                   type="submit"
                   className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                  // onClick={handleNext}
+                // onClick={handleNext}
                 >
                   Next&nbsp;&nbsp;
                   <i className="fa-solid fa-arrow-right"></i>
@@ -2035,6 +1979,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               </div>
               <hr />
               <div className="w-full h-[73vh] overflow-auto">
+                <h1 className="text-[18px] mt-4 justify-center font-semibold text-[#ff5001]">
+                  General Health issues
+                </h1>
                 <div className="w-[90%] flex flex-wrap my-4  items-center justify-start gap-x- lg:gap-x-10 gap-y-4">
                   {conditions.map((condition, index) => (
                     <div className="w-[160px]" key={index}>
@@ -2204,6 +2151,70 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     </div>
                   </div>
                 </div>
+                <div className="w-[90%]" align="start">
+                  <div>
+                    <TextLabel label={"BP *"} />
+                  </div>
+                  <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
+                    <RadioButton
+                      id="bpyes"
+                      value="yes"
+                      name="bp"
+                      selectedOption={selectedOption.bp || ""}
+                      onChange={(e) => {
+                        setSelectedOption({
+                          ...selectedOption,
+                          bp: e.target.value, // Corrected: updating backpain instead of care
+                        });
+                      }}
+                      label="Yes"
+                      required
+                    />
+
+                    <RadioButton
+                      id="bpno"
+                      value="no"
+                      name="bp"
+                      selectedOption={selectedOption.bp || ""}
+                      onChange={(e) => {
+                        setSelectedOption({
+                          ...selectedOption,
+                          bp: e.target.value, // Corrected: updating backpain instead of care
+                        });
+                      }}
+                      label="No"
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-row w-[100%] justify-between">
+                    <div className="mb-[20px] w-[48%]">
+                      <SelectInput
+                        id="bp"
+                        name="bp"
+                        label="BP"
+                        options={[
+                          { value: "low", label: "Low" },
+                          { value: "high", label: "High" },
+                        ]}
+                        disabled={selectedOption.bp === "yes" ? false : true}
+                        required
+                        value={inputs.bp}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                    <div className="mb-[20px] w-[48%]">
+                      <TextInput
+                        id="bp"
+                        name="bpValue"
+                        label="Additional Content (BP)"
+                        disabled={selectedOption.bp === "yes" ? false : true}
+                        required
+                        value={inputs.bpValue}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <hr />
               <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
@@ -2247,6 +2258,202 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               </div>
               <hr />
               <div className="w-full h-[73vh] overflow-auto ">
+                <div className="w-full h-[73vh] overflow-auto">
+                  <div className="w-[90%] mt-3 mb-[20px]">
+                    <TextInput
+                      id="durationproblem"
+                      type="text"
+                      name="duration"
+                      placeholder="your name"
+                      label="Duration of the Problem"
+                      value={inputs.duration}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
+                  <div className="w-[90%] mb-[20px]">
+                    <TextInput
+                      id="relevantpasthistory"
+                      type="text"
+                      name="past"
+                      label="Relevant past History"
+                      placeholder="Write your message"
+                      value={inputs.past}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
+                  <div className="w-[90%] mb-[20px]">
+                    <TextInput
+                      id="relevantfamilyhistory"
+                      type="text"
+                      name="family"
+                      label="Relevant Family History"
+                      placeholder="Write your message"
+                      value={inputs.family}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
+                  <div className="w-[90%] mb-[20px]">
+                    <TextInput
+                      id="anythingelsetherapy"
+                      name="therapyanything"
+                      label="Add your Comments"
+                      type="text"
+                      value={inputs.therapyanything}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
+                  <div className="w-[90%]" align="start">
+                    <div>
+                      <TextLabel
+                        label={
+                          "Recent Injuries / Accidents / Surgeries / Fractures / Sprains *"
+                        }
+                      />
+                    </div>
+                    <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
+                      <RadioButton
+                        id="breaksyes"
+                        value="yes"
+                        name="breaks"
+                        selectedOption={selectedOption.breaks || ""}
+                        onChange={(e) => {
+                          setSelectedOption({
+                            ...selectedOption,
+                            breaks: e.target.value,
+                          });
+                        }}
+                        label="Yes"
+                        required
+                      />
+                      <RadioButton
+                        id="breaksno"
+                        value="no"
+                        name="breaks"
+                        selectedOption={selectedOption.breaks || ""}
+                        onChange={(e) => {
+                          setSelectedOption({
+                            ...selectedOption,
+                            breaks: e.target.value,
+                          });
+                        }}
+                        label="No"
+                        required
+                      />
+                    </div>
+                    <div className="mb-[20px]">
+                      <TextInput
+                        id="breaksdetail"
+                        type="text"
+                        name="breaks"
+                        placeholder="your name"
+                        label="Description"
+                        disabled={
+                          selectedOption.breaks === "yes" ? false : true
+                        }
+                        value={inputs.breaks}
+                        onChange={(e) => handleInput(e)}
+                        maxLength={500} // Sets the character limit to 100
+                      />
+                    </div>
+                  </div>{" "}
+                  <div className="w-[90%] mb-[20px]">
+                    <div className="w-full">
+                      <TextInput
+                        id="otheractivities"
+                        type="text"
+                        name="activities"
+                        placeholder="your name"
+                        label="Other Activities"
+                        disabled={
+                          selectedOption.breaks === "yes" ? false : true
+                        }
+                        value={inputs.activities}
+                        onChange={(e) => handleInput(e)}
+                        maxLength={500}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[90%] mb-[20px]">
+                    <div className="w-full">
+                      <TextInput
+                        id="anythingelse"
+                        type="text"
+                        name="anthingelse"
+                        placeholder="your name"
+                        label="Add your Comments"
+                        disabled={
+                          selectedOption.breaks === "yes" ? false : true
+                        }
+                        value={inputs.anthingelse}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+              <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+                {loading ? (
+                  <div className="flex w-full justify-end items-end">
+                    <svg className="loadersvg my-4" viewBox="25 25 50 50">
+                      <circle
+                        className="loadercircle"
+                        r="20"
+                        cy="50"
+                        cx="50"
+                      ></circle>
+                    </svg>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                      type="button"
+                      onClick={handleBack}
+                    >
+                      <i className="fa-solid fa-arrow-left"></i>
+                      &nbsp;&nbsp;Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                    >
+                      Next&nbsp;&nbsp;
+                      <i className="fa-solid fa-check"></i>
+                    </button>
+                  </>
+                )}
+              </div>
+            </form>
+          </>
+        )}
+
+        {stepperactive === 5 && (
+          <>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setStepperactive((prev) => (prev < 6 ? prev + 1 : prev));
+              }}
+            >
+              <div className="w-full h-[7vh] flex justify-center items-center">
+                <div className="w-[90%] justify-between flex h-[7vh] items-center">
+                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+                    Health Problems History
+                  </h1>
+                  <div
+                    onClick={() => {
+                      closeregistration();
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <div className="w-full h-[73vh] overflow-auto">
                 <div className="w-[90%] flex flex-wrap my-4 items-center justify-end gap-x- lg:gap-x-10 gap-y-4">
                   <button
                     type="button"
@@ -2378,8 +2585,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="submit"
                       className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
                     >
-                      Next&nbsp;&nbsp;
-                      <i className="fa-solid fa-check"></i>
+                      Register&nbsp;&nbsp;
+                      <i class="fa-solid fa-check"></i>
                     </button>
                   </>
                 )}
@@ -2387,8 +2594,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             </form>
           </>
         )}
-
-        {stepperactive === 5 && (
+        {stepperactive === 6 && (
           <>
             <form
               onSubmit={(e) => {
@@ -2400,7 +2606,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <div className="w-full h-[7vh] flex justify-center items-center">
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    Health Problems History
+                    Disclaimer (Please Read Carefully)
                   </h1>
                   <div
                     onClick={() => {
@@ -2412,55 +2618,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 </div>
               </div>
               <hr />
-              <div className="w-full h-[73vh] overflow-auto">
-                <div className="w-[90%] mt-3 mb-[20px]">
-                  <TextInput
-                    id="durationproblem"
-                    type="text"
-                    name="duration"
-                    placeholder="your name"
-                    label="Duration of the Problem"
-                    value={inputs.duration}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
-                <div className="w-[90%] mb-[20px]">
-                  <TextInput
-                    id="relevantpasthistory"
-                    type="text"
-                    name="past"
-                    label="Relevant past History"
-                    placeholder="Write your message"
-                    value={inputs.past}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
-                <div className="w-[90%] mb-[20px]">
-                  <TextInput
-                    id="relevantfamilyhistory"
-                    type="text"
-                    name="family"
-                    label="Relevant Family History"
-                    placeholder="Write your message"
-                    value={inputs.family}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
-                <div className="w-[90%] mb-[20px]">
-                  <TextInput
-                    id="anythingelsetherapy"
-                    name="therapyanything"
-                    label="Add your Comments"
-                    type="text"
-                    value={inputs.therapyanything}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
 
+              <div className="w-full h-[73vh] overflow-auto">
                 <div className="w-[90%] mb-[20px]">
-                  <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
+                  {/* <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
                     Disclaimer (Please Read Carefully)
-                  </label>
+                  </label> */}
                   <label className="w-[100%] text-[#f95005]  text-[1rem] lg:text-[20px] text-start">
                     Personal Responsibility
                   </label>
@@ -2548,6 +2711,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   />
                 </div>
               </div>
+
               <hr />
               <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
                 {loading ? (

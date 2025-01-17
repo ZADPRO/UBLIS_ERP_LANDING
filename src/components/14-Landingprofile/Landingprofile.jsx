@@ -724,7 +724,7 @@ const Landingprofile = () => {
           if (data.token == false) {
             navigate("/expired");
           }
-          console.log("Member List -----------", data);
+          console.log("Batch -----------", data);
           setpreferTiming(data.SectionTime);
           setSessionType(data.CustTime);
         })
