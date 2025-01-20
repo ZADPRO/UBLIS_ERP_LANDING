@@ -22,6 +22,11 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const [options, setOptions] = useState({
+    medicalIssue: false,
+  });
+
+
   let today = new Date();
   let month = today.getMonth();
   let year = today.getFullYear();
@@ -147,7 +152,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     if (nextStepperValue !== null) {
       setNewStepperValue(nextStepperValue);
     }
-  }, [newStepperValue]); 
+  }, [newStepperValue]);
 
 
   const handleNext = () => {
@@ -919,7 +924,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
+                setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -1645,18 +1650,17 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                // setStepperactive((prev) => (prev < 3 ? prev + 1 : prev));
-                // const nextValue = nextStepperValue !== undefined ? nextStepperValue : (prev < 3 ? prev + 1 : prev);
-                // console.log('nextStepperValue', nextStepperValue)
-                // console.log('nextValue', nextValue)
-                console.log('nextStepperValue', selectedValue)
-                if(selectedValue === "second"){
-                  setStepperactive(6)
-                }
-                if(selectedValue === "first"){
-                  setStepperactive(3)
-                }
-                // setStepperactive(nextStepperValue);
+
+                setStepperactive((prev) => {
+                  console.log('prev', prev)
+                  console.log("before \n", prev);
+                  const updatedValue = !options.medicalIssue
+                    ? (prev < 3 ? prev + 4 : prev)
+                    : (prev < 3 ? prev + 1 : prev);
+                  console.log("after \n", updatedValue);
+                  return updatedValue; // Return the updated value
+                });
+                alert(prev)
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -1903,32 +1907,49 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 ) : (
                   <></>
                 )}
-                <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
-                  Medical Issues *
-                </label>
-                <div className="w-[100%] flex justify-start mt-[10px]">
-                  <div className="mr-10">
-                    <input
-                      type="radio"
-                      id="firstOption"
-                      name="selection"
-                      value="Yes"
-                      onChange={handleRadioChange}
-                      checked={selectedValue === 'first'} // Only check if selected
-                    />
-                    <label htmlFor="firstOption">First Option</label>
+                <div className="w-[100%] lg:w-[90%] my-[1%]">
+                  <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
+                    Medical Issue *{" "}
+                  </label>
+                  <div className="w-[100%] flex justify-start mt-[10px]">
+                    <div className="mr-10">
+                      <RadiobuttonInput
+                        id="medicalIssue"
+                        value="yes"
+                        name="medicalIssue"
+                        selectedOption={options.medicalIssue ? "yes" : ""}
+                        onChange={() => {
+                          setOptions({
+                            ...options,
+                            medicalIssue: true,
+                          });
+                        }}
+                        label="Yes"
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <RadiobuttonInput
+                        id="medicalIssue"
+                        value="no"
+                        name="medicalIssue"
+                        label="No"
+                        onChange={() => {
+                          setOptions({
+                            ...options,
+                            medicalIssue: false,
+                          });
+                        }}
+                        selectedOption={!options.medicalIssue ? "no" : ""}
+                        required
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="secondOption"
-                      name="selection"
-                      value="No"
-                      onChange={handleRadioChange}
-                      checked={selectedValue === 'second'} // Only check if selected
-                    />
-                    <label htmlFor="secondOption">Second Option</label>
-                  </div>
+                  <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
+                      <p>
+                      Note * : If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
+                      </p>
+                    </div>
                 </div>
               </div>
               <hr />
@@ -2730,7 +2751,17 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     <button
                       className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
                       type="button"
-                      onClick={handleBack}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!options.medicalIssue) {
+                          setStepperactive((prev) => (prev > 1 ? prev - 4 : prev));
+                        }
+                        else {
+                          handleBack()
+                        }
+                      }
+
+                      }
                     >
                       <i className="fa-solid fa-arrow-left"></i>
                       &nbsp;&nbsp;Back
