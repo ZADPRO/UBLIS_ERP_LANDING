@@ -30,6 +30,7 @@ const Landingprofile = () => {
     breaks: false,
     care: false,
     backpain: false,
+    bp: false,
   });
 
   const decrypt = (encryptedData, iv, key) => {
@@ -1602,11 +1603,10 @@ const Landingprofile = () => {
                       </div>
                       <div className="flex flex-col w-[48%] -mt-[13px]">
                         <label
-                          className={`bg-[#fff] -mb-[15px] z-50 w-[150px] ml-[10px] ${
-                            inputs.maritalstatus === "married"
-                              ? "text-[#ff621b] !important"
-                              : "text-[#b3b4b6] !important"
-                          }`}
+                          className={`bg-[#fff] -mb-[15px] z-50 w-[150px] ml-[10px] ${inputs.maritalstatus === "married"
+                            ? "text-[#ff621b] !important"
+                            : "text-[#b3b4b6] !important"
+                            }`}
                         >
                           &nbsp;Anniversary Date *
                         </label>
@@ -1616,11 +1616,10 @@ const Landingprofile = () => {
                           name="anniversarydate"
                           id="anniversarydate"
                           type="date"
-                          className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput ${
-                            inputs.maritalstatus === "married"
-                              ? ""
-                              : "cursor-not-allowed"
-                          }`}
+                          className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput ${inputs.maritalstatus === "married"
+                            ? ""
+                            : "cursor-not-allowed"
+                            }`}
                           onChange={(e) =>
                             handleInput({
                               target: {
@@ -1710,7 +1709,7 @@ const Landingprofile = () => {
                       <div
                         className={
                           localStorage.getItem("refUtId") === "5" ||
-                          localStorage.getItem("refUtId") === "6"
+                            localStorage.getItem("refUtId") === "6"
                             ? "w-[48%]"
                             : "w-[48%]"
                         }
@@ -1730,21 +1729,22 @@ const Landingprofile = () => {
                       <div
                         className={
                           localStorage.getItem("refUtId") === "5" ||
-                          localStorage.getItem("refUtId") === "6"
+                            localStorage.getItem("refUtId") === "6"
                             ? "w-[48%]"
                             : "w-[48%]"
                         }
                       >
                         <div className="w-[100%]">
                           <TextInput
-                            label="Occupation"
-                            name="occupation"
-                            id="Occupation"
+                            id="occupation"
                             type="text"
-                            disabled={inputs.age > "18" ? false : true}
-                            onChange={handleInputVal}
+                            name="occupation"
+                            placeholder="your name"
+                            label="Occupation *"
+                            required
+                            disabled={inputs.age > 20 ? false : true}
                             value={inputs.occupation}
-                            readonly={!edits.personal}
+                            onChange={(e) => handleInput(e)}
                           />
                         </div>
                       </div>
@@ -1811,7 +1811,8 @@ const Landingprofile = () => {
                       required
                       value={inputs.emgContaxt}
                       readonly={!edits.communitcation}
-                      onChange={(e) => handleInput(e)}
+                      // onChange={(e) => handleInput(e)}
+                      onChange={handleInputVal}
                     />
                   </div>
                 </div>
@@ -2235,8 +2236,54 @@ const Landingprofile = () => {
                     />
                   </div>
                 </div>
+                <div className="w-[100%] lg:w-[100%] my-[1%]">
+                  <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
+                    Medical Issue *{" "}
+                  </label>
+                  <div className="w-[100%] flex justify-start mt-[10px]">
+                    <div className="mr-10">
+                      <RadiobuttonInput
+                        id="medicalIssue"
+                        value="yes"
+                        name="medicalIssue"
+                        selectedOption={options.medicalIssue ? "yes" : ""}
+                        onChange={() => {
+                          setOptions({
+                            ...options,
+                            medicalIssue: true,
+                          });
+                        }}
+                        label="Yes"
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <RadiobuttonInput
+                        id="medicalIssue"
+                        value="no"
+                        name="medicalIssue"
+                        label="No"
+                        onChange={() => {
+                          setOptions({
+                            ...options,
+                            medicalIssue: false,
+                          });
+                        }}
+                        selectedOption={!options.medicalIssue ? "no" : ""}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
+                    <p>
+                      Note * : If you have any medical history, any medical
+                      problems, or feel that you have any body pain or other
+                      health issues, click 'Yes.' Otherwise, click 'No'.
+                    </p>
+                  </div>
+                </div>
 
-                <div className="w-[100%] flex justify-between mb-[20px]">
+                {/* <div className="w-[100%] flex justify-between mb-[20px]">
                   <div className="w-[100%]">
                     <TextInput
                       label="BP"
@@ -2248,9 +2295,9 @@ const Landingprofile = () => {
                       readonly={!edits.gendrel}
                     />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="w-[100%] flex flex-col lg:flex-row gap-y-[25px] justify-between mb-[25px]">
+                {/* <div className="w-[100%] flex flex-col lg:flex-row gap-y-[25px] justify-between mb-[25px]">
                   <div className="w-[100%] lg:w-[48%]">
                     <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
                       Recent injuries / Accidents / Operations *{" "}
@@ -2400,7 +2447,7 @@ const Landingprofile = () => {
                       readonly={!edits.gendrel}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </form>
@@ -2415,7 +2462,7 @@ const Landingprofile = () => {
             <div className="basicProfileCont m-[10px] lg:m-[30px] p-[20px] lg:p-[40px] shadow-lg">
               <div className="w-[100%] flex justify-between items-center mb-5">
                 <div className="text-[1.2rem] lg:text-[25px] font-bold">
-                  Past or Present Health
+                  Past or Present Health Problems
                 </div>
                 {edits.present ? (
                   <button
@@ -2454,7 +2501,7 @@ const Landingprofile = () => {
                   </div>
 
                   <div className="w-[100%] flex flex-col lg:flex-row gap-y-[20px] justify-between mb-[20px]">
-                    <div className="w-[100%] lg:w-[48%]">
+                    <div className="w-[100%] lg:w-[48%] ">
                       <TextInput
                         label="Others"
                         name="pastother"
@@ -2480,7 +2527,7 @@ const Landingprofile = () => {
                   </div>
 
                   <div className="w-[100%] flex flex-col gap-y-[20px] lg:flex-row justify-between">
-                    <div className="w-[100%] lg:w-[48%]">
+                    <div className="w-[100%] lg:w-[100%] ">
                       <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
                         Under Physician's Care *
                       </label>
@@ -2520,7 +2567,7 @@ const Landingprofile = () => {
                           />
                         </div>
                       </div>
-                      <div className="w-[100%] flex justify-between mt-[20px]">
+                      <div className="w-[100%] flex justify-between mt-[20px] ">
                         <div className="w-[48%]">
                           <TextInput
                             label="Doctor Name"
@@ -2545,6 +2592,80 @@ const Landingprofile = () => {
                             disabled={!options.care}
                             readonly={!edits.present}
                             required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-[100%] flex flex-col gap-y-[20px] lg:flex-row justify-between  mt-[20px] ">
+                    <div className="w-[100%] lg:w-[48%]">
+                      <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
+                        Back Pain *
+                      </label>
+                      <div className="w-[100%] flex justify-start mt-[10px]">
+                        <div className="mr-10">
+                          <RadiobuttonInput
+                            id="painyes"
+                            value="yes"
+                            name="pain"
+                            label="Yes"
+                            selectedOption={options.backpain ? "yes" : ""}
+                            onChange={() => {
+                              setOptions({
+                                ...options,
+                                backpain: true,
+                              });
+                            }}
+                            readonly={!edits.present}
+                            required
+                          />
+                        </div>
+                        <div className="">
+                          <RadiobuttonInput
+                            id="painno"
+                            value="no"
+                            name="pain"
+                            label="No"
+                            selectedOption={!options.backpain ? "no" : ""}
+                            onChange={() => {
+                              setOptions({
+                                ...options,
+                                backpain: false,
+                              });
+                            }}
+                            readonly={!edits.present}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="w-[100%] flex justify-between mt-[20px]">
+                        <div className="w-[48%]">
+                          <SelectInput
+                            id="painscale"
+                            name="backpainscale"
+                            label="Pain Scale"
+                            onChange={handleInputVal}
+                            value={inputs.backpainscale}
+                            options={[
+                              { value: "upper", label: "Upper" },
+                              { value: "middle", label: "Middle" },
+                              { value: "lower", label: "Lower" },
+                            ]}
+                            disabled={!options.backpain || !edits.present}
+                            required
+                          />
+                        </div>
+                        <div div className="w-[48%]">
+                          <TextInput
+                            id="BackPainValue"
+                            name="BackPainValue"
+                            label="Additional Content (Back Pain)"
+                            disabled={!options.backpain || !edits.present}
+                            required
+                            value={inputs.BackPainValue}
+                            onChange={(e) => handleInput(e)}
                           />
                         </div>
                       </div>
@@ -2620,6 +2741,115 @@ const Landingprofile = () => {
                         </div>
                       </div>
                     </div>
+                   
+                   
+                    {/* <div className="w-[100%] lg:w-[48%]">
+                      <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
+                        BP *
+                      </label>
+                      <div className="w-[100%] flex justify-start mt-[10px]">
+                        <div className="mr-10">
+                          <RadiobuttonInput
+                            id="painyes"
+                            value="yes"
+                            name="pain"
+                            label="Yes"
+                            selectedOption={options.bp ? "yes" : ""}
+                            onChange={() => {
+                              setOptions({
+                                ...options,
+                                bp: true,
+                              });
+                            }}
+                            readonly={!edits.present}
+                            required
+                          />
+                            <RadiobuttonInput
+                              id="painno"
+                              value="no"
+                              name="pain"
+                              label="No"
+                              selectedOption={!options.bp ? "no" : ""}
+                              onChange={() => {
+                                setOptions({
+                                  ...options,
+                                  bp: false,
+                                });
+                              }}
+                              readonly={!edits.present}
+                              required
+                            />
+                        </div>
+                        <div className="w-[100%] flex justify-between mt-[20px]">
+                        <div className="w-[48%]">
+                          
+                          </div></div>
+                      </div>
+                    </div> */}
+                    {/* <div className="w-[90%]" align="start">
+                  <div>
+                    <TextLabel label={"BP *"} />  
+                  </div>
+                  <div className="flex w-[48%] gap-x-10 mt-2 mb-[20px]">
+                    <RadioButton
+                      id="bpyes"
+                      value="yes"
+                      name="bp"
+                      selectedOption={selectedOption.bp || ""}
+                      onChange={(e) => {
+                        setSelectedOption({
+                          ...selectedOption,
+                          bp: e.target.value, // Corrected: updating backpain instead of care
+                        });
+                      }}
+                      label="Yes"
+                      required
+                    />
+
+                    <RadioButton
+                      id="bpno"
+                      value="no"
+                      name="bp"
+                      selectedOption={selectedOption.bp || ""}
+                      onChange={(e) => {
+                        setSelectedOption({
+                          ...selectedOption,
+                          bp: e.target.value, // Corrected: updating backpain instead of care
+                        });
+                      }}
+                      label="No"
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-row w-[100%] justify-between">
+                    <div className="mb-[20px] w-[48%]">
+                      <SelectInput
+                        id="bp"
+                        name="bp"
+                        label="BP"
+                        options={[
+                          { value: "low", label: "Low" },
+                          { value: "high", label: "High" },
+                        ]}
+                        disabled={selectedOption.bp === "yes" ? false : true}
+                        required
+                        value={inputs.bp}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                    <div className="mb-[20px] w-[48%]">
+                      <TextInput
+                        id="bp"
+                        name="bpValue"
+                        label="BP Value (120/80)"
+                        disabled={selectedOption.bp === "yes" ? false : true}
+                        required
+                        value={inputs.bpValue}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                  </div>
+                </div> */}
                   </div>
                 </div>
               </div>

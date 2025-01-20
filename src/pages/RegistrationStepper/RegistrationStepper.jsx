@@ -363,7 +363,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
   const [memberList, setMemberList] = useState([]);
 
-  const [preferTiming, setpreferTiming] = useState([]);
+  const [preferWeekDaysTiming, setpreferWeekDaysTiming] = useState([]);
+  const [preferWeekEndTiming, setpreferWeekEndTiming] = useState([]);
 
   const [sessiontype, setSessionType] = useState([]);
 
@@ -466,7 +467,13 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     })
   );
 
-  const preferTimingOption = Object.entries(preferTiming).map(
+  const preferWeekDaysTimingOption = Object.entries(preferWeekDaysTiming).map(
+    ([value, label]) => ({
+      value, // Key (e.g., '1')
+      label, // Value (e.g., 'Chennai')
+    })
+  );
+  const preferWeekEndTimingOption = Object.entries(preferWeekEndTiming).map(
     ([value, label]) => ({
       value, // Key (e.g., '1')
       label, // Value (e.g., 'Chennai')
@@ -685,7 +692,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             navigate("/expired");
           }
           console.log("Timing List -----------", data);
-          setpreferTiming(data.packageTiming);
+          setpreferWeekDaysTiming(data.packageWTiming);
+          setpreferWeekEndTiming(data.packageWeTiming);
           // setSessionType(data.SectionTime);
         })
         .catch((err) => {
@@ -1820,22 +1828,46 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
                 </div>
 
-                <div className="w-[90%] flex justify-between mb-[20px]">
+                {preferWeekDaysTimingOption.length > 0 ?
+                 <>
+                 <div className="w-[90%] flex justify-between mb-[20px]">
                   <div className="w-[100%]">
                     <SelectInput
                       id="memberlist"
                       name="preferabletiming"
-                      label="Preferable Timing *"
-                      options={preferTimingOption}
+                      label="WeekDays Class Timing*"
+                      options={preferWeekDaysTimingOption}
                       required
                       disabled={packageSelect > 3 ? false : true}
                       value={inputs.preferabletiming}
-                      onChange={(e) => {
-                        setPackageSelect(5), handleInput(e);
-                      }}
+
+                      // onChange={(e) => {
+                      //   setPackageSelect(5), handleInput(e);
+                      // }}
                     />
                   </div>
-                </div>
+                </div></> : <></>}
+
+                {preferWeekEndTimingOption.length > 0 ? <> <div className="w-[90%] flex justify-between mb-[20px]">
+                  <div className="w-[100%]">
+                    <SelectInput
+                      id="memberlist"
+                      name="preferabletiming"
+                      label="Weekend Class Timing*"
+                      options={preferWeekEndTimingOption}
+                      required
+                      disabled={packageSelect > 3 ? false : true}
+                      value={inputs.preferabletiming}
+
+                      // onChange={(e) => {
+                      //   setPackageSelect(5), handleInput(e);
+                      // }}
+                    />
+                  </div>
+                </div></> : <></>}
+
+               
+               
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
                   align="start"
@@ -2001,7 +2033,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <hr />
               <div className="w-full h-[73vh] overflow-auto">
                 <h1 className="text-[18px] mt-4 justify-center font-semibold text-[#ff5001]">
-                  General Health issues
+                   Health issues
                 </h1>
                 <div className="w-[90%] flex flex-wrap my-4  items-center justify-start gap-x- lg:gap-x-10 gap-y-4">
                   {conditions.map((condition, index) => (
@@ -2227,7 +2259,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       <TextInput
                         id="bp"
                         name="bpValue"
-                        label="Additional Content (BP)"
+                        label="BP Value (120/80)"
                         disabled={selectedOption.bp === "yes" ? false : true}
                         required
                         value={inputs.bpValue}
@@ -2270,7 +2302,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <div className="w-full h-[7vh] flex justify-center items-center">
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    Medical Documents Upload
+                  Health Problems History 
                   </h1>
                   <div onClick={() => closeregistration()}>
                     <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
@@ -2286,7 +2318,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="text"
                       name="duration"
                       placeholder="your name"
-                      label="Duration of the Problem"
+                      label="Duration of the Problem *"
                       value={inputs.duration}
                       onChange={(e) => handleInput(e)}
                     />
@@ -2461,7 +2493,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <div className="w-full h-[7vh] flex justify-center items-center">
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    Health Problems History
+                    Medical Documents Upload
                   </h1>
                   <div
                     onClick={() => {
@@ -2606,7 +2638,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="submit"
                       className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
                     >
-                      Register&nbsp;&nbsp;
+                      Next&nbsp;&nbsp;
                       <i class="fa-solid fa-check"></i>
                     </button>
                   </>
