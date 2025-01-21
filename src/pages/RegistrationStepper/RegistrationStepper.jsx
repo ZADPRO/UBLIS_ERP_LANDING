@@ -17,6 +17,7 @@ import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { Calendar } from "primereact/calendar";
 import RadiobuttonInput from "../Inputs/RadiobuttonInput";
+import { Input } from "postcss";
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
@@ -160,7 +161,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
   };
 
-  const handleBack = () => {
+  const  handleBack = () => {
     setStepperactive((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
@@ -634,7 +635,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
             navigate("/expired");
           }
           setMemberList(data.data); // Make sure this updates memberList
-          setpreferTiming([]);
+          // setpreferTiming([]);
           setSessionType([]);
         })
         .catch((err) => {
@@ -675,6 +676,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     } else if (name === "sessiontype") {
 
       updatedInputs = {
+        ...inputs,
+        [name]: value,
         weekDaysTiming: "",
         weekEndTiming: ""
       };
@@ -846,7 +849,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           refHospital: inputs.hospitalname,
           refBackPain:
             selectedOption.backpain === "no" ? "No" : inputs.painscale,
-          refIfBp: selectedOption.bp === "no" ? "No" : inputs.bp,
+          refIfBp: selectedOption.bp,
           refBpType: inputs.bp,
           refBP: inputs.bpValue,
           refProblem: inputs.duration,
@@ -2224,7 +2227,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
                   <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
                     <RadioButton
-                      id="bpyes"
+                      id="bp"
                       value="yes"
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
@@ -2239,7 +2242,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     />
 
                     <RadioButton
-                      id="bpno"
+                      id="bp"
                       value="no"
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
@@ -2674,12 +2677,14 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
                     Disclaimer (Please Read Carefully)
+
                   </h1>
                   <div
                     onClick={() => {
                       closeregistration();
                     }}
                   >
+                      
                     <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
                   </div>
                 </div>

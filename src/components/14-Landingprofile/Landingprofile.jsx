@@ -190,6 +190,7 @@ const Landingprofile = () => {
     bloodgroup: "",
     bmi: "",
     bp: "",
+    bpscale: "",
     accidentdetails: "",
     breaksdetails: "",
     breaksotheractivities: "",
@@ -534,7 +535,7 @@ const Landingprofile = () => {
           weight: generalHealth ? generalHealth.refWeight : null,
           bloodgroup: generalHealth ? generalHealth.refBlood : null,
           bmi: generalHealth ? generalHealth.refBMI : null,
-          bp: generalHealth ? generalHealth.refBP : null,
+        
           accidentdetails: generalHealth
             ? generalHealth.refRecentInjuriesReason
             : null,
@@ -551,7 +552,8 @@ const Landingprofile = () => {
           caredoctorhospital: presentHealth ? presentHealth.refHospital : null,
           backpainscale: presentHealth ? presentHealth.refBackPain : null,
           BackPainValue: presentHealth ? presentHealth.refBackPainValue : null,
-
+          bp: presentHealth ? generalHealth.refBP : null,
+          bpscale: presentHealth ? generalHealth.refBpType : null,
           therapydurationproblem: presentHealth
             ? presentHealth.refProblem
             : null,
@@ -2672,20 +2674,20 @@ const Landingprofile = () => {
                     </div>
                     <div className="w-[100%] lg:w-[48%]">
                       <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
-                        Back Pain *
+                      BP *
                       </label>
                       <div className="w-[100%] flex justify-start mt-[10px]">
                         <div className="mr-10">
                           <RadiobuttonInput
-                            id="painyes"
+                            id="bpyes"
                             value="yes"
-                            name="pain"
+                            name="bp"
                             label="Yes"
-                            selectedOption={options.backpain ? "yes" : ""}
+                            selectedOption={options.bp ? "yes" : ""}
                             onChange={() => {
                               setOptions({
                                 ...options,
-                                backpain: true,
+                                bp: true,
                               });
                             }}
                             readonly={!edits.present}
@@ -2694,15 +2696,15 @@ const Landingprofile = () => {
                         </div>
                         <div className="">
                           <RadiobuttonInput
-                            id="painno"
+                            id="bpno"
                             value="no"
-                            name="pain"
+                            name="bp"
                             label="No"
-                            selectedOption={!options.backpain ? "no" : ""}
+                            selectedOption={!options.bp ? "no" : ""}
                             onChange={() => {
                               setOptions({
                                 ...options,
-                                backpain: false,
+                                bp: false,
                               });
                             }}
                             readonly={!edits.present}
@@ -2714,28 +2716,27 @@ const Landingprofile = () => {
                       <div className="w-[100%] flex justify-between mt-[20px]">
                         <div className="w-[48%]">
                           <SelectInput
-                            id="painscale"
-                            name="backpainscale"
-                            label="Pain Scale"
+                            id="bp"
+                            name="bp"
+                            label="BP"
                             onChange={handleInputVal}
-                            value={inputs.backpainscale}
+                            value={inputs.bp}
                             options={[
-                              { value: "upper", label: "Upper" },
-                              { value: "middle", label: "Middle" },
-                              { value: "lower", label: "Lower" },
+                              { value: "low", label: "Low" },
+                              { value: "high", label: "High" },
                             ]}
-                            disabled={!options.backpain || !edits.present}
+                            disabled={!options.bp || !edits.present}
                             required
                           />
                         </div>
                         <div div className="w-[48%]">
                           <TextInput
-                            id="BackPainValue"
-                            name="BackPainValue"
-                            label="Additional Content (Back Pain)"
-                            disabled={!options.backpain || !edits.present}
+                            id="bp"
+                            name="bpValue"
+                            label="BP Value (120/80)"
+                            disabled={!options.bp || !edits.present}
                             required
-                            value={inputs.BackPainValue}
+                            value={inputs.bpValue}
                             onChange={(e) => handleInput(e)}
                           />
                         </div>
