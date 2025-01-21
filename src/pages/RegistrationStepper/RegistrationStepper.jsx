@@ -83,12 +83,14 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     classtype: "",
     bmi: 0,
     bp: "",
+    bpValue: "",
     injuries: "",
     breaks: "",
     activities: "",
     anthingelse: "",
     memberlist: "",
-    preferabletiming: "",
+    weekDaysTiming: "",
+    weekEndTiming: "",
     sessiontype: "",
     branch: "",
     others: "",
@@ -96,7 +98,6 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     doctorname: "",
     hospitalname: "",
     painscale: "",
-    bpValue: "",
     painscaleValue: "",
     duration: "",
     past: "",
@@ -584,7 +585,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   }
 
   const handleInput = (e) => {
-    console.log("e", e);
+    console.log("e", e.target);
     const { name, value } = e.target;
     console.log("value", value);
     console.log("name", name);
@@ -593,6 +594,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
       ...inputs,
       [name]: value,
     };
+
+
 
     // If the "addressboth" flag is true, copy the permanent address fields to temporary fields
     if (updatedInputs.addressboth) {
@@ -670,6 +673,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           console.error("Error: ", err);
         });
     } else if (name === "sessiontype") {
+
+      updatedInputs = {
+        weekDaysTiming: "",
+        weekEndTiming: ""
+      };
+
       Axios.post(
         import.meta.env.VITE_API_URL + "profile/PackageTime",
         {
@@ -795,11 +804,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           ref_su_qulify: inputs.qualification,
           ref_su_occu: inputs.occupation,
           ref_su_guardian: inputs.caretakername,
-          ref_su_timing: parseInt(inputs.preferabletiming),
           ref_su_branchId: parseInt(inputs.branch),
-          ref_su_seTId: parseInt(inputs.memberlist),
-          ref_su_prTimeId: parseInt(inputs.preferabletiming),
-          ref_su_seModeId: parseInt(inputs.sessiontype),
+          ref_Batch_Id: parseInt(inputs.memberlist),
+          ref_Weekend_Timing: parseInt(inputs.weekDaysTiming),
+          ref_Weekdays_Timing: parseInt(inputs.weekEndTiming),
+          ref_Threapy: options.medicalIssue,
+          ref_Package_Id: parseInt(inputs.sessiontype), // 
           ref_su_MaritalStatus: inputs.maritalstatus,
           ref_su_kidsCount: parseInt(inputs.kidsCount),
           ref_su_WeddingDate: inputs.anniversarydate
@@ -808,11 +818,11 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           ref_su_deliveryType: inputs.deliveryType ? inputs.deliveryType : null,
 
           ref_su_communicationPreference: parseInt(inputs.mode),
-          ref_Class_Mode: parseInt(inputs.classtype),
-          ref_su_fromMonth: inputs.monthStart
+          ref_Class_Mode: parseInt(inputs.classtype), //
+          ref_Session_From: inputs.monthStart
             ? datePickerToMyFormat(inputs.monthStart)
             : null,
-          ref_su_toMonth: inputs.monthEnd
+          ref_Session_To: inputs.monthEnd
             ? datePickerToMyFormat(inputs.monthEnd)
             : null,
         },
@@ -836,9 +846,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           refHospital: inputs.hospitalname,
           refBackPain:
             selectedOption.backpain === "no" ? "No" : inputs.painscale,
-          refBP: selectedOption.bp === "no" ? "No" : inputs.bp,
-
-          refbpValue: selectedOption.bp === "no" ? "No" : inputs.bpValue,
+          refIfBp: selectedOption.bp === "no" ? "No" : inputs.bp,
+          refBpType: inputs.bp,
+          refBP: inputs.bpValue,
           refProblem: inputs.duration,
           refPastHistory: inputs.past,
           refFamilyHistory: inputs.family,
@@ -1822,52 +1832,56 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       required
                       value={inputs.sessiontype}
                       onChange={(e) => {
-                        setPackageSelect(4), handleInput(e);
+                        setPackageSelect(4);
+
+                        handleInput(e);
+                        console.log('e line ---- 1833', e.target)
                       }}
+
                     />
                   </div>
                 </div>
 
                 {preferWeekDaysTimingOption.length > 0 ?
-                 <>
-                 <div className="w-[90%] flex justify-between mb-[20px]">
-                  <div className="w-[100%]">
-                    <SelectInput
-                      id="memberlist"
-                      name="preferabletiming"
-                      label="WeekDays Class Timing*"
-                      options={preferWeekDaysTimingOption}
-                      required
-                      disabled={packageSelect > 3 ? false : true}
-                      value={inputs.preferabletiming}
+                  <>
+                    <div className="w-[90%] flex justify-between mb-[20px]">
+                      <div className="w-[100%]">
+                        <SelectInput
+                          id="weekDaysTiming"
+                          name="weekDaysTiming"
+                          label="WeekDays Class Timing*"
+                          options={preferWeekDaysTimingOption}
+                          required
+                          disabled={packageSelect > 3 ? false : true}
+                          value={inputs.weekDaysTiming}
 
-                      // onChange={(e) => {
-                      //   setPackageSelect(5), handleInput(e);
-                      // }}
-                    />
-                  </div>
-                </div></> : <></>}
+                          onChange={(e) => {
+                            setPackageSelect(5), handleInput(e);
+                          }}
+                        />
+                      </div>
+                    </div></> : <></>}
 
                 {preferWeekEndTimingOption.length > 0 ? <> <div className="w-[90%] flex justify-between mb-[20px]">
                   <div className="w-[100%]">
                     <SelectInput
-                      id="memberlist"
-                      name="preferabletiming"
+                      id="weekEndTiming"
+                      name="weekEndTiming"
                       label="Weekend Class Timing*"
                       options={preferWeekEndTimingOption}
                       required
                       disabled={packageSelect > 3 ? false : true}
-                      value={inputs.preferabletiming}
+                      value={inputs.weekEndTiming}
 
-                      // onChange={(e) => {
-                      //   setPackageSelect(5), handleInput(e);
-                      // }}
+                      onChange={(e) => {
+                        setPackageSelect(5), handleInput(e);
+                      }}
                     />
                   </div>
                 </div></> : <></>}
 
-               
-               
+
+
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
                   align="start"
@@ -1978,10 +1992,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     </div>
                   </div>
                   <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
-                      <p>
+                    <p>
                       Note * : If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
-                      </p>
-                    </div>
+                    </p>
+                  </div>
                 </div>
               </div>
               <hr />
@@ -2033,7 +2047,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <hr />
               <div className="w-full h-[73vh] overflow-auto">
                 <h1 className="text-[18px] mt-4 justify-center font-semibold text-[#ff5001]">
-                   Health issues
+                  Health issues
                 </h1>
                 <div className="w-[90%] flex flex-wrap my-4  items-center justify-start gap-x- lg:gap-x-10 gap-y-4">
                   {conditions.map((condition, index) => (
@@ -2302,7 +2316,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               <div className="w-full h-[7vh] flex justify-center items-center">
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                  Health Problems History 
+                    Health Problems History
                   </h1>
                   <div onClick={() => closeregistration()}>
                     <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
