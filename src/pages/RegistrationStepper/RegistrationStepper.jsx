@@ -18,6 +18,8 @@ import Swal from "sweetalert2";
 import { Calendar } from "primereact/calendar";
 import RadiobuttonInput from "../Inputs/RadiobuttonInput";
 import { Input } from "postcss";
+import { LuCalendarClock } from "react-icons/lu";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
@@ -161,7 +163,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
   };
 
-  const  handleBack = () => {
+  const handleBack = () => {
     setStepperactive((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
@@ -367,6 +369,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
   const [preferWeekDaysTiming, setpreferWeekDaysTiming] = useState([]);
   const [preferWeekEndTiming, setpreferWeekEndTiming] = useState([]);
+  const [browsher, setBrowsher] = useState();
+  const [viewBrowsher, setViewBrowsher] = useState(false);
 
   const [sessiontype, setSessionType] = useState([]);
 
@@ -686,6 +690,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
         import.meta.env.VITE_API_URL + "profile/PackageTime",
         {
           packageId: parseInt(value),
+          branchId: parseInt(inputs.branch),
         },
         {
           headers: {
@@ -706,6 +711,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           console.log("Timing List -----------", data);
           setpreferWeekDaysTiming(data.packageWTiming);
           setpreferWeekEndTiming(data.packageWeTiming);
+          setBrowsher(data.browsher)
           // setSessionType(data.SectionTime);
         })
         .catch((err) => {
@@ -811,7 +817,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           ref_Batch_Id: parseInt(inputs.memberlist),
           ref_Weekend_Timing: parseInt(inputs.weekDaysTiming),
           ref_Weekdays_Timing: parseInt(inputs.weekEndTiming),
-          ref_Threapy: options.medicalIssue,
+          ref_HealthIssue: options.medicalIssue,
           ref_Package_Id: parseInt(inputs.sessiontype), // 
           ref_su_MaritalStatus: inputs.maritalstatus,
           ref_su_kidsCount: parseInt(inputs.kidsCount),
@@ -1668,359 +1674,391 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
         {stepperactive === 2 && (
           <>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
 
-                setStepperactive((prev) => {
-                  console.log('prev', prev)
-                  console.log("before \n", prev);
-                  const updatedValue = !options.medicalIssue
-                    ? (prev < 3 ? prev + 4 : prev)
-                    : (prev < 3 ? prev + 1 : prev);
-                  console.log("after \n", updatedValue);
-                  return updatedValue; // Return the updated value
-                });
-                alert(prev)
-              }}
-            >
-              <div className="w-full h-[7vh] flex justify-center items-center">
-                <div className="w-[90%] justify-between flex h-[7vh] items-center">
-                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    General Health Details
-                  </h1>
-                  <div
-                    onClick={() => {
-                      closeregistration();
-                    }}
-                  >
-                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
-                  </div>
+            {viewBrowsher ? <>
+              <div className="flex flex-col p-5 gap-5 h-full">
+                <button
+                  className="text-xl"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setViewBrowsher(false);
+                  }}
+                >
+                  <FaArrowLeftLong />
+                </button>
+                <div className="overflow-auto h-[calc(100vh-100px)]">
+                  <img className="w-full" src={browsher[0].refBroLink} alt="Brochure" />
                 </div>
               </div>
-              <hr />
-              <div className="w-full h-[73vh] overflow-auto">
-                <div
-                  className="w-[90%] mt-3 mb-[20px] flex justify-between"
-                  align="start"
-                >
-                  <div className="w-[48%]">
-                    <TextInput
-                      id="height"
-                      type="number"
-                      name="height"
-                      placeholder="your name"
-                      label="Height in CM *"
-                      required
-                      value={inputs.height}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
-                  <div className="w-[48%]">
-                    <TextInput
-                      id="weight"
-                      type="number"
-                      name="weight"
-                      placeholder="your name"
-                      label="Weight in KG *"
-                      required
-                      value={inputs.weight}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
-                </div>
 
-                <div
-                  className="w-[90%] mb-[20px] flex justify-between"
-                  align="start"
-                >
-                  <div className="w-[48%]">
-                    <SelectInput
-                      id="bloodgroup"
-                      name="bloodgroup"
-                      label="Blood Group *"
-                      options={[
-                        { value: "A+", label: "A+" },
-                        { value: "A-", label: "A-" },
-                        { value: "B+", label: "B+" },
-                        { value: "B-", label: "B-" },
-                        { value: "AB+", label: "AB+" },
-                        { value: "AB-", label: "AB-" },
-                        { value: "O+", label: "O+" },
-                        { value: "O-", label: "O-" },
-                      ]}
-                      required
-                      value={inputs.bloodgroup}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
-                  <div className="w-[48%]">
-                    <TextInput
-                      id="bmi"
-                      type="tel"
-                      name="bmi"
-                      placeholder="your name"
-                      label="BMI"
-                      readonly
-                      value={inputs.bmi}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-[18px] mt-4  font-semibold text-[#ff5001] mb-4">
-                    Packages
-                  </h1>
-                </div>
+            </> : <>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
 
-                <div className="w-[90%] flex justify-between mb-[20px]">
-                  <div className="w-[48%]">
-                    <SelectInput
-                      id="branch"
-                      name="branch"
-                      label="Branch *"
-                      options={branchOptions}
-                      required
-                      value={inputs.branch}
-                      onChange={(e) => {
-                        setPackageSelect(1), handleInput(e);
+                  setStepperactive((prev) => {
+                    console.log('prev', prev)
+                    console.log("before \n", prev);
+                    const updatedValue = !options.medicalIssue
+                      ? (prev < 3 ? prev + 4 : prev)
+                      : (prev < 3 ? prev + 1 : prev);
+                    console.log("after \n", updatedValue);
+                    return updatedValue; // Return the updated value
+                  });
+                  alert(prev)
+                }}
+              >
+                <div className="w-full h-[7vh] flex justify-center items-center">
+                  <div className="w-[90%] justify-between flex h-[7vh] items-center">
+                    <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+                      General Health Details
+                    </h1>
+                    <div
+                      onClick={() => {
+                        closeregistration();
                       }}
-                    />
-                  </div>
-
-                  <div className="w-[48%]">
-                    <SelectInput
-                      id="memberlist"
-                      name="memberlist"
-                      label="Batch *"
-                      required
-                      options={memberlistOptions}
-                      value={inputs.memberlist}
-                      onChange={(e) => {
-                        setPackageSelect(2), handleInput(e);
-                      }}
-                      disabled={packageSelect > 0 ? false : true}
-                    />
+                    >
+                      <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+                    </div>
                   </div>
                 </div>
-                <div
-                  className="w-[90%] mb-[20px] flex justify-between"
-                  align="start"
-                >
-                  <div className="w-[48%]">
-                    <SelectInput
-                      id="classtype"
-                      name="classtype"
-                      label="Class Type *"
-                      options={[
-                        { value: "1", label: "Online" },
-                        { value: "2", label: "Offline" },
-                      ]}
-                      required
-                      value={inputs.classtype}
-                      disabled={packageSelect > 1 ? false : true}
-                      onChange={(e) => {
-                        setPackageSelect(3), handleInput(e);
-                      }}
-                    />
+                <hr />
+                <div className="w-full h-[73vh] overflow-auto">
+                  <div
+                    className="w-[90%] mt-3 mb-[20px] flex justify-between"
+                    align="start"
+                  >
+                    <div className="w-[48%]">
+                      <TextInput
+                        id="height"
+                        type="number"
+                        name="height"
+                        placeholder="your name"
+                        label="Height in CM *"
+                        required
+                        value={inputs.height}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                    <div className="w-[48%]">
+                      <TextInput
+                        id="weight"
+                        type="number"
+                        name="weight"
+                        placeholder="your name"
+                        label="Weight in KG *"
+                        required
+                        value={inputs.weight}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
                   </div>
-                  <div className="w-[48%]">
-                    <SelectInput
-                      id="sessiontype"
-                      name="sessiontype"
-                      label="Class Package *"
-                      placeholder="Select Package"
-                      disabled={packageSelect > 2 ? false : true}
-                      options={sessionTypeOption}
-                      required
-                      value={inputs.sessiontype}
-                      onChange={(e) => {
-                        setPackageSelect(4);
 
-                        handleInput(e);
-                        console.log('e line ---- 1833', e.target)
-                      }}
-
-                    />
+                  <div
+                    className="w-[90%] mb-[20px] flex justify-between"
+                    align="start"
+                  >
+                    <div className="w-[48%]">
+                      <SelectInput
+                        id="bloodgroup"
+                        name="bloodgroup"
+                        label="Blood Group *"
+                        options={[
+                          { value: "A+", label: "A+" },
+                          { value: "A-", label: "A-" },
+                          { value: "B+", label: "B+" },
+                          { value: "B-", label: "B-" },
+                          { value: "AB+", label: "AB+" },
+                          { value: "AB-", label: "AB-" },
+                          { value: "O+", label: "O+" },
+                          { value: "O-", label: "O-" },
+                        ]}
+                        required
+                        value={inputs.bloodgroup}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
+                    <div className="w-[48%]">
+                      <TextInput
+                        id="bmi"
+                        type="tel"
+                        name="bmi"
+                        placeholder="your name"
+                        label="BMI"
+                        readonly
+                        value={inputs.bmi}
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div>
+                    <h1 className="text-[18px] mt-4  font-semibold text-[#ff5001] mb-4">
+                      Packages
+                    </h1>
 
-                {preferWeekDaysTimingOption.length > 0 ?
-                  <>
-                    <div className="w-[90%] flex justify-between mb-[20px]">
-                      <div className="w-[100%]">
-                        <SelectInput
-                          id="weekDaysTiming"
-                          name="weekDaysTiming"
-                          label="WeekDays Class Timing*"
-                          options={preferWeekDaysTimingOption}
-                          required
-                          disabled={packageSelect > 3 ? false : true}
-                          value={inputs.weekDaysTiming}
+                  </div>
 
-                          onChange={(e) => {
-                            setPackageSelect(5), handleInput(e);
+                  <div className="w-[90%] flex justify-between mb-[20px]">
+                    <div className="w-[48%]">
+                      <SelectInput
+                        id="branch"
+                        name="branch"
+                        label="Branch *"
+                        options={branchOptions}
+                        required
+                        value={inputs.branch}
+                        onChange={(e) => {
+                          setPackageSelect(1), handleInput(e);
+                        }}
+                      />
+                    </div>
+
+                    <div className="w-[48%]">
+                      <SelectInput
+                        id="memberlist"
+                        name="memberlist"
+                        label="Batch *"
+                        required
+                        options={memberlistOptions}
+                        value={inputs.memberlist}
+                        onChange={(e) => {
+                          setPackageSelect(2), handleInput(e);
+                        }}
+                        disabled={packageSelect > 0 ? false : true}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className="w-[90%] mb-[20px] flex justify-between"
+                    align="start"
+                  >
+                    <div className="w-[48%]">
+                      <SelectInput
+                        id="classtype"
+                        name="classtype"
+                        label="Class Type *"
+                        options={[
+                          { value: "1", label: "Online" },
+                          { value: "2", label: "Offline" },
+                        ]}
+                        required
+                        value={inputs.classtype}
+                        disabled={packageSelect > 1 ? false : true}
+                        onChange={(e) => {
+                          setPackageSelect(3), handleInput(e);
+                        }}
+                      />
+                    </div>
+                    <div className="w-[48%]">
+                      <SelectInput
+                        id="sessiontype"
+                        name="sessiontype"
+                        label="Class Package *"
+                        placeholder="Select Package"
+                        disabled={packageSelect > 2 ? false : true}
+                        options={sessionTypeOption}
+                        required
+                        value={inputs.sessiontype}
+                        onChange={(e) => {
+                          setPackageSelect(4); // Update the packageSelect state
+                          handleInput(e);
+                          console.log('e line ---- 1833', e.target);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Conditionally render the notes */}
+                  {packageSelect > 3 && (
+                    <div>
+                      <div className="w-[90%] text-2xl text-[#ff5001] mb-[25px] flex justify-start gap-3">
+                        <button onClick={(e) => {
+                          e.preventDefault();
+                          setViewBrowsher(true);
+                        }}>  <LuCalendarClock /> </button>
+                        <p className="text-base">
+                          Click on this icon to view the package timings.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {preferWeekDaysTimingOption.length > 0 ?
+                    <>
+                      <div className="w-[90%] flex justify-between mb-[20px]">
+                        <div className="w-[100%]">
+                          <SelectInput
+                            id="weekDaysTiming"
+                            name="weekDaysTiming"
+                            label="WeekDays Class Timing*"
+                            options={preferWeekDaysTimingOption}
+                            required
+                            disabled={packageSelect > 3 ? false : true}
+                            value={inputs.weekDaysTiming}
+
+                            onChange={(e) => {
+                              setPackageSelect(5), handleInput(e);
+                            }}
+                          />
+                        </div>
+                      </div></> : <></>}
+
+                  {preferWeekEndTimingOption.length > 0 ? <> <div className="w-[90%] flex justify-between mb-[20px]">
+                    <div className="w-[100%]">
+                      <SelectInput
+                        id="weekEndTiming"
+                        name="weekEndTiming"
+                        label="Weekend Class Timing*"
+                        options={preferWeekEndTimingOption}
+                        required
+                        disabled={packageSelect > 3 ? false : true}
+                        value={inputs.weekEndTiming}
+
+                        onChange={(e) => {
+                          setPackageSelect(5), handleInput(e);
+                        }}
+                      />
+                    </div>
+                  </div></> : <></>}
+
+
+
+                  <div
+                    className="w-[90%] mb-[20px] flex justify-between"
+                    align="start"
+                  >
+                    <div className="flex flex-col w-[48%] -mt-[13px]">
+                      <label
+                        className={`bg-[#fff] ${packageSelect > 4 ? "text-[#ff621b]" : "text-[#a4b0c2]"
+                          } -mb-[15px] z-50 w-[130px] ml-[10px]`}
+                      >
+                        &nbsp;Starting Month *
+                      </label>
+
+                      <Calendar
+                        label="Starting Month *"
+                        className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
+                        ${packageSelect > 4
+                            ? "border-[#ff621b] text-[#4c4c4e]"
+                            : "border-[#a4b0c2] text-[#a4b0c2]"
+                          } autofill:bg-white dateInput`}
+                        readOnlyInput
+                        dateFormat="mm/yy"
+                        view="month"
+                        name="monthStart"
+                        value={inputs.monthStart}
+                        disabled={packageSelect > 4 ? false : true}
+                        onChange={(e) => {
+                          setPackageSelect(6), handleInput(e);
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col w-[48%] -mt-[13px]">
+                      <label
+                        className={`bg-[#fff] ${packageSelect > 5 ? "text-[#ff621b]" : "text-[#a4b0c2]"
+                          } -mb-[15px] z-50 w-[130px] ml-[10px]`}
+                      >
+                        &nbsp; Ending Month *
+                      </label>
+
+                      <Calendar
+                        label="Ending Month"
+                        className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
+                        ${packageSelect > 5
+                            ? "border-[#ff621b] text-[#4c4c4e]"
+                            : "border-[#a4b0c2] text-[#a4b0c2]"
+                          } autofill:bg-white dateInput`}
+                        readOnlyInput
+                        dateFormat="mm/yy"
+                        view="month"
+                        name="monthEnd"
+                        value={inputs.monthEnd}
+                        disabled={packageSelect > 5 ? false : true}
+                        onChange={(e) => {
+                          setPackageSelect(7),
+                            handleInput(e),
+                            calculateWeekendsAndWeekdays(e);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {packageSelect > 5 ? (
+                    <>
+                      <div className="mt-0 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
+                        <p>
+                          The Weekend class count is {counts.weekends} and The
+                          Weekday's class count is {counts.weekdays} .
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <div className="w-[100%] lg:w-[90%] my-[1%]">
+                    <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
+                      Medical Issue *{" "}
+                    </label>
+                    <div className="w-[100%] flex justify-start mt-[10px]">
+                      <div className="mr-10">
+                        <RadiobuttonInput
+                          id="medicalIssue"
+                          value="yes"
+                          name="medicalIssue"
+                          selectedOption={options.medicalIssue ? "yes" : ""}
+                          onChange={() => {
+                            setOptions({
+                              ...options,
+                              medicalIssue: true,
+                            });
                           }}
+                          label="Yes"
+                          required
                         />
                       </div>
-                    </div></> : <></>}
-
-                {preferWeekEndTimingOption.length > 0 ? <> <div className="w-[90%] flex justify-between mb-[20px]">
-                  <div className="w-[100%]">
-                    <SelectInput
-                      id="weekEndTiming"
-                      name="weekEndTiming"
-                      label="Weekend Class Timing*"
-                      options={preferWeekEndTimingOption}
-                      required
-                      disabled={packageSelect > 3 ? false : true}
-                      value={inputs.weekEndTiming}
-
-                      onChange={(e) => {
-                        setPackageSelect(5), handleInput(e);
-                      }}
-                    />
-                  </div>
-                </div></> : <></>}
-
-
-
-                <div
-                  className="w-[90%] mb-[20px] flex justify-between"
-                  align="start"
-                >
-                  <div className="flex flex-col w-[48%] -mt-[13px]">
-                    <label
-                      className={`bg-[#fff] ${packageSelect > 4 ? "text-[#ff621b]" : "text-[#a4b0c2]"
-                        } -mb-[15px] z-50 w-[130px] ml-[10px]`}
-                    >
-                      &nbsp;Starting Month *
-                    </label>
-
-                    <Calendar
-                      label="Starting Month *"
-                      className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
-                        ${packageSelect > 4
-                          ? "border-[#ff621b] text-[#4c4c4e]"
-                          : "border-[#a4b0c2] text-[#a4b0c2]"
-                        } autofill:bg-white dateInput`}
-                      readOnlyInput
-                      dateFormat="mm/yy"
-                      view="month"
-                      name="monthStart"
-                      value={inputs.monthStart}
-                      disabled={packageSelect > 4 ? false : true}
-                      onChange={(e) => {
-                        setPackageSelect(6), handleInput(e);
-                      }}
-                    />
-                  </div>
-                  <div className="flex flex-col w-[48%] -mt-[13px]">
-                    <label
-                      className={`bg-[#fff] ${packageSelect > 5 ? "text-[#ff621b]" : "text-[#a4b0c2]"
-                        } -mb-[15px] z-50 w-[130px] ml-[10px]`}
-                    >
-                      &nbsp; Ending Month *
-                    </label>
-
-                    <Calendar
-                      label="Ending Month"
-                      className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
-                        ${packageSelect > 5
-                          ? "border-[#ff621b] text-[#4c4c4e]"
-                          : "border-[#a4b0c2] text-[#a4b0c2]"
-                        } autofill:bg-white dateInput`}
-                      readOnlyInput
-                      dateFormat="mm/yy"
-                      view="month"
-                      name="monthEnd"
-                      value={inputs.monthEnd}
-                      disabled={packageSelect > 5 ? false : true}
-                      onChange={(e) => {
-                        setPackageSelect(7),
-                          handleInput(e),
-                          calculateWeekendsAndWeekdays(e);
-                      }}
-                    />
-                  </div>
-                </div>
-                {packageSelect > 5 ? (
-                  <>
-                    <div className="mt-0 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
+                      <div className="">
+                        <RadiobuttonInput
+                          id="medicalIssue"
+                          value="no"
+                          name="medicalIssue"
+                          label="No"
+                          onChange={() => {
+                            setOptions({
+                              ...options,
+                              medicalIssue: false,
+                            });
+                          }}
+                          selectedOption={!options.medicalIssue ? "no" : ""}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
                       <p>
-                        The Weekend class count is {counts.weekends} and The
-                        Weekday's class count is {counts.weekdays} .
+                        Note * : If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
                       </p>
                     </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-                <div className="w-[100%] lg:w-[90%] my-[1%]">
-                  <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
-                    Medical Issue *{" "}
-                  </label>
-                  <div className="w-[100%] flex justify-start mt-[10px]">
-                    <div className="mr-10">
-                      <RadiobuttonInput
-                        id="medicalIssue"
-                        value="yes"
-                        name="medicalIssue"
-                        selectedOption={options.medicalIssue ? "yes" : ""}
-                        onChange={() => {
-                          setOptions({
-                            ...options,
-                            medicalIssue: true,
-                          });
-                        }}
-                        label="Yes"
-                        required
-                      />
-                    </div>
-                    <div className="">
-                      <RadiobuttonInput
-                        id="medicalIssue"
-                        value="no"
-                        name="medicalIssue"
-                        label="No"
-                        onChange={() => {
-                          setOptions({
-                            ...options,
-                            medicalIssue: false,
-                          });
-                        }}
-                        selectedOption={!options.medicalIssue ? "no" : ""}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
-                    <p>
-                      Note * : If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
-                    </p>
                   </div>
                 </div>
-              </div>
-              <hr />
-              <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
-                <button
-                  type="button"
-                  className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                  onClick={handleBack}
-                >
-                  <i className="fa-solid fa-arrow-left"></i>
-                  &nbsp;&nbsp;Back
-                </button>
-                <button
-                  type="submit"
-                  className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                // onClick={handleNext}
-                >
-                  Next&nbsp;&nbsp;
-                  <i className="fa-solid fa-arrow-right"></i>
-                </button>
-              </div>
-            </form>
+                <hr />
+                <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+                  <button
+                    type="button"
+                    className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                    onClick={handleBack}
+                  >
+                    <i className="fa-solid fa-arrow-left"></i>
+                    &nbsp;&nbsp;Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                  // onClick={handleNext}
+                  >
+                    Next&nbsp;&nbsp;
+                    <i className="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+              </form></>}
+
           </>
         )}
 
@@ -2227,7 +2265,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
                   <div className="flex w-[90%] gap-x-10 mt-2 mb-[20px]">
                     <RadioButton
-                      id="bp"
+                      id="bpyes"
                       value="yes"
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
@@ -2242,7 +2280,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     />
 
                     <RadioButton
-                      id="bp"
+                      id="bpno"
                       value="no"
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
@@ -2677,14 +2715,13 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 <div className="w-[90%] justify-between flex h-[7vh] items-center">
                   <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
                     Disclaimer (Please Read Carefully)
-
                   </h1>
                   <div
                     onClick={() => {
                       closeregistration();
                     }}
                   >
-                      
+
                     <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
                   </div>
                 </div>
