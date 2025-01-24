@@ -855,7 +855,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           refHospital: inputs.hospitalname,
           refBackPain:
             selectedOption.backpain === "no" ? "No" : inputs.painscale,
-          refIfBp: selectedOption.bp,
+          refIfBp: selectedOption.bp === "" ? false :selectedOption.bp ,
           refBpType: inputs.bp,
           refBP: inputs.bpValue,
           refProblem: inputs.duration,
@@ -1875,10 +1875,11 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                         <button onClick={(e) => {
                           e.preventDefault();
                           setViewBrowsher(true);
-                        }}>  <LuCalendarClock /> </button>
-                        <p className="text-base">
+                        }}><div className="flex flex-row gap-3"><LuCalendarClock /><p className="text-base">
                           Click on this icon to view the package timings.
-                        </p>
+                        </p></div>   </button>
+                        
+                        
                       </div>
                     </div>
                   )}
@@ -2540,166 +2541,175 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
         {stepperactive === 5 && (
           <>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setStepperactive((prev) => (prev < 6 ? prev + 1 : prev));
-              }}
-            >
-              <div className="w-full h-[7vh] flex justify-center items-center">
-                <div className="w-[90%] justify-between flex h-[7vh] items-center">
-                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    Medical Documents Upload
-                  </h1>
-                  <div
-                    onClick={() => {
-                      closeregistration();
-                    }}
-                  >
-                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
-                  </div>
-                </div>
-              </div>
-              <hr />
+  onSubmit={(e) => {
+    e.preventDefault();
+    const allFilesUploaded = uploadDocuments.every(
+      (doc) => doc.refMedDocUpload === true
+    );
 
-              <div className="w-full h-[73vh] overflow-auto">
-                <div className="w-[90%] flex flex-wrap my-4 items-center justify-end gap-x- lg:gap-x-10 gap-y-4">
-                  <button
-                    type="button"
-                    className="py-2 px-4 bg-[#f95005] text-white rounded hover:bg-[#f95005]"
-                    onClick={handleAddDocument}
-                  >
-                    Add Document
-                  </button>
-                </div>
-                {uploadDocuments.map((document, index) => (
-                  <div
-                    key={index}
-                    className="w-[100%] flex flex-row justify-evenly lg:p-[10px] mt-5 lg:mt-0"
-                  >
-                    <div>
-                      {document.refMedDocUpload && (
-                        <div className="pt-5 align-content-start">
-                          <FaEye
-                            className="w-[30px] h-[25px] text-[#f95005] cursor-pointer"
-                            onClick={() =>
-                              handlePreviewDocument(uploadDocuments, index)
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
+    if (!allFilesUploaded) {
+      alert("Please upload all selected files before proceeding.");
+      return;
+    }
 
-                    <div className="mb-4 w-[40%] flex flex-col justify-start text-start">
-                      <label className="block text-gray-700 font-medium mb-2">
-                        Enter File Name:
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter a name for the file"
-                        className="w-full border border-gray-300 rounded px-4 py-2"
-                        value={document.refMedDocName || ""}
-                        onChange={(e) => {
-                          setUploadDocuments((prev) => {
-                            const updatedDocuments = [...prev];
-                            updatedDocuments[index].refMedDocName =
-                              e.target.value;
-                            return updatedDocuments;
-                          });
-                        }}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 w-[40%] flex flex-col justify-start text-start">
-                      <label className="block text-gray-700 font-medium mb-2">
-                        Upload File:
-                      </label>
-                      <input
-                        type="file"
-                        accept="application/pdf,image/*"
-                        className="w-full border border-gray-300 rounded px-4 py-2 uploadfile disabled:cursor-not-allowed disabled:text-slate-400 disabled:before:bg-transparent"
-                        disabled={document.refMedDocUpload}
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            const formData = new FormData();
-                            formData.append("file", file);
-                            setUploadDocuments((prev) => {
-                              const updatedDocuments = [...prev];
-                              updatedDocuments[index].refMedDocFile = formData;
-                              updatedDocuments[index].refMedDocUpBtn = true;
-                              return updatedDocuments;
-                            });
-                          }
-                        }}
-                        required
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      className={`text-[green] disabled:cursor-not-allowed disabled:text-slate-400 disabled:before:bg-transparent`}
-                      onClick={() => storeDocument(index)}
-                      disabled={
-                        document.refMedDocUpload === true ||
-                        document.refMedDocUpBtn === false
-                      }
-                    >
-                      <ImUpload2 className="w-[30px] h-[25px]" />
-                    </button>
+    setStepperactive((prev) => (prev < 6 ? prev + 1 : prev));
+  }}
+>
+  <div className="w-full h-[7vh] flex justify-center items-center">
+    <div className="w-[90%] justify-between flex h-[7vh] items-center">
+      <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+        Medical Documents Upload
+      </h1>
+      <div
+        onClick={() => {
+          closeregistration();
+        }}
+      >
+        <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+      </div>
+    </div>
+  </div>
+  <hr />
 
-                    {/* Delete Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveDocument(index)}
-                      className="text-[red]"
-                    >
-                      <MdDelete className="w-[30px] h-[30px]" />
-                    </button>
-                  </div>
-                ))}
-                <div>
-                  {" "}
-                  <p className="text-[#ff5001] p-5 mt-10">
-                    Note: If you need to upload a medical document, please do so
-                    now (the file size must be below 5 MB). Otherwise, click the
-                    delete icon to remove it and proceed to the next step.
-                  </p>
-                </div>
-              </div>
+  <div className="w-full h-[73vh] overflow-auto">
+    <div className="w-[90%] flex flex-wrap my-4 items-center justify-end gap-x- lg:gap-x-10 gap-y-4">
+      <button
+        type="button"
+        className="py-2 px-4 bg-[#f95005] text-white rounded hover:bg-[#f95005]"
+        onClick={handleAddDocument}
+      >
+        Add Document
+      </button>
+    </div>
+    {uploadDocuments.map((document, index) => (
+      <div
+        key={index}
+        className="w-[100%] flex flex-row justify-evenly lg:p-[10px] mt-5 lg:mt-0"
+      >
+        <div>
+          {document.refMedDocUpload && (
+            <div className="pt-5 align-content-start">
+              <FaEye
+                className="w-[30px] h-[25px] text-[#f95005] cursor-pointer"
+                onClick={() =>
+                  handlePreviewDocument(uploadDocuments, index)
+                }
+              />
+            </div>
+          )}
+        </div>
 
-              <hr />
-              <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
-                {loading ? (
-                  <div className="flex w-full justify-end items-end">
-                    <svg className="loadersvg my-4" viewBox="25 25 50 50">
-                      <circle
-                        className="loadercircle"
-                        r="20"
-                        cy="50"
-                        cx="50"
-                      ></circle>
-                    </svg>
-                  </div>
-                ) : (
-                  <>
-                    <button
-                      className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                      type="button"
-                      onClick={handleBack}
-                    >
-                      <i className="fa-solid fa-arrow-left"></i>
-                      &nbsp;&nbsp;Back
-                    </button>
-                    <button
-                      type="submit"
-                      className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                    >
-                      Next&nbsp;&nbsp;
-                      <i class="fa-solid fa-check"></i>
-                    </button>
-                  </>
-                )}
-              </div>
-            </form>
+        <div className="mb-4 w-[40%] flex flex-col justify-start text-start">
+          <label className="block text-gray-700 font-medium mb-2">
+            Enter File Name:
+          </label>
+          <input
+            type="text"
+            placeholder="Enter a name for the file"
+            className="w-full border border-gray-300 rounded px-4 py-2"
+            value={document.refMedDocName || ""}
+            onChange={(e) => {
+              setUploadDocuments((prev) => {
+                const updatedDocuments = [...prev];
+                updatedDocuments[index].refMedDocName = e.target.value;
+                return updatedDocuments;
+              });
+            }}
+            required
+          />
+        </div>
+        <div className="mb-4 w-[40%] flex flex-col justify-start text-start">
+          <label className="block text-gray-700 font-medium mb-2">
+            Upload File:
+          </label>
+          <input
+            type="file"
+            accept="application/pdf,image/*"
+            className="w-full border border-gray-300 rounded px-4 py-2 uploadfile disabled:cursor-not-allowed disabled:text-slate-400 disabled:before:bg-transparent"
+            disabled={document.refMedDocUpload}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+                setUploadDocuments((prev) => {
+                  const updatedDocuments = [...prev];
+                  updatedDocuments[index].refMedDocFile = formData;
+                  updatedDocuments[index].refMedDocUpBtn = true;
+                  return updatedDocuments;
+                });
+              }
+            }}
+            required
+          />
+        </div>
+        <button
+          type="button"
+          className={`text-[green] disabled:cursor-not-allowed disabled:text-slate-400 disabled:before:bg-transparent`}
+          onClick={() => storeDocument(index)}
+          disabled={
+            document.refMedDocUpload === true ||
+            document.refMedDocUpBtn === false
+          }
+        >
+          <ImUpload2 className="w-[30px] h-[25px]" />
+        </button>
+
+        {/* Delete Button */}
+        <button
+          type="button"
+          onClick={() => handleRemoveDocument(index)}
+          className="text-[red]"
+        >
+          <MdDelete className="w-[30px] h-[30px]" />
+        </button>
+      </div>
+    ))}
+    <div>
+      {" "}
+      <p className="text-[#ff5001] p-5 mt-10">
+        Note: If you need to upload a medical document, please do so
+        now (the file size must be below 5 MB). Otherwise, click the
+        delete icon to remove it and proceed to the next step.
+      </p>
+    </div>
+  </div>
+
+  <hr />
+  <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+    {loading ? (
+      <div className="flex w-full justify-end items-end">
+        <svg className="loadersvg my-4" viewBox="25 25 50 50">
+          <circle
+            className="loadercircle"
+            r="20"
+            cy="50"
+            cx="50"
+          ></circle>
+        </svg>
+      </div>
+    ) : (
+      <>
+        <button
+          className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+          type="button"
+          onClick={handleBack}
+        >
+          <i className="fa-solid fa-arrow-left"></i>
+          &nbsp;&nbsp;Back
+        </button>
+        <button
+          type="submit"
+          className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+        >
+          Next&nbsp;&nbsp;
+          <i class="fa-solid fa-check"></i>
+        </button>
+      </>
+    )}
+  </div>
+</form>
+
           </>
         )}
         {stepperactive === 6 && (
