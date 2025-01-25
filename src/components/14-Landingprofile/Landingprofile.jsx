@@ -35,6 +35,7 @@ const Landingprofile = () => {
     care: false,
     backpain: false,
     ifbp: false,
+    
   });
   // const handleFormToggle = (value) => {
   //   if (value === "yes") {
@@ -94,6 +95,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         personalData: {
           refOccupation: inputs.occupation,
           refQualification: inputs.qualification,
@@ -186,7 +188,6 @@ const Landingprofile = () => {
   const [inputs, setInputs] = useState({
     profilefile: { contentType: "", content: "" },
     fname: "",
-
     lname: "",
     dob: "",
     age: "",
@@ -454,7 +455,7 @@ const Landingprofile = () => {
           return;
         }
 
-        console.log("UserData Running --- ", data);
+        console.log("UserData Running --- 460 ", data);
 
         localStorage.setItem("JWTtoken", `Bearer ${data.token}`);
 
@@ -641,6 +642,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         presentHealth: {
           refIfBp: inputs.ifbp,
           refBP: inputs.bpValue,
@@ -824,6 +826,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         communication: {
           refCtEmail: inputs.email,
           refCtMobile: inputs.phoneno,
@@ -884,6 +887,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         address: {
           addresstype: options.address,
           refAdFlat1: inputs.perdoorno ? inputs.perdoorno : "",
@@ -950,6 +954,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         generalhealth: updatedGeneralHealth,
         medicalIssue: personalData
       },
@@ -998,6 +1003,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         presentHealth: {
           refRecentFractures: options.accident,
           refRecentFracturesReason: inputs.breaksdetails,
@@ -1067,6 +1073,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
+        refStId:"",
         medicalDocuments,
       },
       {
