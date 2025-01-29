@@ -35,7 +35,7 @@ const Landingprofile = () => {
     care: false,
     backpain: false,
     ifbp: false,
-    
+
   });
   // const handleFormToggle = (value) => {
   //   if (value === "yes") {
@@ -95,7 +95,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         personalData: {
           refOccupation: inputs.occupation,
           refQualification: inputs.qualification,
@@ -511,7 +511,7 @@ const Landingprofile = () => {
         const generalHealth = data.data.generalhealth;
         console.log("generalHealth line -------- 478", generalHealth);
         const presentHealth = data.data.presentHealth;
-        console.log("presentHealth####------------------>", personalData);
+        console.log("presentHealth####------------------>", presentHealth);
 
         setOptions({
           address: addressData ? addressData.addresstype : false,
@@ -642,7 +642,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         presentHealth: {
           refIfBp: inputs.ifbp,
           refBP: inputs.bpValue,
@@ -675,7 +675,7 @@ const Landingprofile = () => {
         } else {
           localStorage.setItem("JWTtoken", `Bearer ${data.token}`);
 
-          
+
           console.log(data.success);
 
           if (data.success) {
@@ -793,7 +793,7 @@ const Landingprofile = () => {
         ...updatedInputs,
         age: calculateAge(value),
       };
-    } else   if (name === "height" || name === "weight") {
+    } else if (name === "height" || name === "weight") {
       const newBMI = calculateBMI(
         name === "weight" ? value : inputs.weight,
         name === "height" ? value : inputs.height
@@ -826,7 +826,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         communication: {
           refCtEmail: inputs.email,
           refCtMobile: inputs.phoneno,
@@ -887,7 +887,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         address: {
           addresstype: options.address,
           refAdFlat1: inputs.perdoorno ? inputs.perdoorno : "",
@@ -954,7 +954,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         generalhealth: updatedGeneralHealth,
         medicalIssue: personalData
       },
@@ -1003,7 +1003,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         presentHealth: {
           refRecentFractures: options.accident,
           refRecentFracturesReason: inputs.breaksdetails,
@@ -1073,7 +1073,7 @@ const Landingprofile = () => {
     Axios.post(
       import.meta.env.VITE_API_URL + "user/updateProfile",
       {
-        refStId:"",
+        refStId: "",
         medicalDocuments,
       },
       {
@@ -1565,47 +1565,24 @@ const Landingprofile = () => {
                           name="dob"
                           id="dob"
                           type="date"
-                          className="relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput"
-                          onChange={(e) =>
+                          className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
+              ${edits.personal ? "text-[#4c4c4e]" : "text-black"} border-[#b3b4b6] autofill:bg-white dateInput`}
+                          
+              onChange={(e) =>
                             handleInput({
                               target: { name: "dob", value: e.value },
                             })
                           }
                           value={inputs.dob ? new Date(inputs.dob) : null} // Ensure it's a Date object
-                          disabled={!edits.personal} // Make it readonly if edits.personal is false
-                          dateFormat="dd/mm/yy" // Display the date in DD/MM/YYYY format
+                          dateFormat="dd/mm/yy"
+                          disabled={!edits.personal} // Disable based on condition
                           required
                         />
+
+
                       </div>
 
-                      {/* <div className="w-[48%]">
-                        <TextInput
-                          label="Date of Birth *"
-                          name="dob"
-                          id="dob"
-                          type="date"
-                          onChange={handleInputVal}
-                          value={inputs.dob}
-                          readonly={!edits.personal}
-                          required
-                        />
-                      </div> */}
-                      {/* <div className="w-[48%]">
-      <label htmlFor="dob" className="block text-gray-700 text-sm font-bold mb-2">
-        Date of Birth *
-      </label>
-      <Calendar
-        id="dob"
-        value={inputs.dob ? new Date(inputs.dob) : null} // Parse string to Date if needed
-        onChange={(e) => handleInputVal({ target: { name: 'dob', value: e.value } })}
-        disabled={!edits.personal}
-        showIcon
-        dateFormat="dd/mm/yy"
-        className="w-full"
-        placeholder="Select your date of birth"
-        required
-      />
-    </div> */}
+
                       <div className="w-[48%]">
                         <TextInput
                           label="Age *"
@@ -1626,7 +1603,7 @@ const Landingprofile = () => {
                           name="gender"
                           label="Gender *"
                           value={inputs.gender}
-                          disabled={!edits.personal}
+                          readOnly={!edits.personal}
                           onChange={handleInputVal}
                           options={[
                             { value: "male", label: "Male" },
@@ -1663,10 +1640,13 @@ const Landingprofile = () => {
                             { value: "married", label: "Married" },
                           ]}
                           disabled={
-                            edits.personal && inputs.age > "18" ? false : true
+                             inputs.age > "18" ? false : true
                           }
                           
+                          readOnly={!edits.personal}
+
                           required
+
                         />
                       </div>
                       <div className="flex flex-col w-[48%] -mt-[13px]">
@@ -1684,10 +1664,8 @@ const Landingprofile = () => {
                           name="anniversarydate"
                           id="anniversarydate"
                           type="date"
-                          className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer border-[#b3b4b6] text-[#4c4c4e] autofill:bg-white dateInput ${inputs.maritalstatus === "married"
-                            ? ""
-                            : "cursor-not-allowed"
-                            }`}
+                          className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
+                            ${edits.personal ? "text-[#4c4c4e]" : "text-black"} border-[#b3b4b6] autofill:bg-white dateInput`}
                           onChange={(e) =>
                             handleInput({
                               target: {
@@ -1712,21 +1690,7 @@ const Landingprofile = () => {
                           required
                         />
                       </div>
-                      {/* <div className="w-[100%] md:w-[48%] lg:w-[48%]">
-                        <TextInput
-                          label="Anniversary Date *"
-                          name="anniversarydate"
-                          id="anniversarydate"
-                          type="date"
-                          onChange={handleInputVal}
-                          disabled={
-                            inputs.maritalstatus === "married" ? false : true
-                          }
-                          readonly
-                          value={inputs.anniversarydate}
-                          required
-                        />
-                      </div> */}
+
                     </div>
 
                     <div className="w-[100%] flex flex-col md:flex-row gap-y-[20px] justify-between mb-[20px]">
@@ -1764,9 +1728,9 @@ const Landingprofile = () => {
                               ? false
                               : true) ||
                             (inputs.gender === "female" ? false : true) ||
-                            (inputs.kidsCount > 0 ? false : true) ||
-                            !edits.personal
+                            (inputs.kidsCount > 0 ? false : true)
                           }
+                          readOnly={!edits.personal}
                           value={inputs.deliveryType}
                           onChange={(e) => handleInput(e)}
                         />
@@ -1812,6 +1776,7 @@ const Landingprofile = () => {
                             required
                             disabled={inputs.age > 20 ? false : true}
                             value={inputs.occupation}
+                            readonly={!edits.personal}
                             onChange={(e) => handleInput(e)}
                           />
                         </div>
@@ -1927,28 +1892,6 @@ const Landingprofile = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* <div className="w-[100%] ">
-                    <SelectInput
-                      id="modeofcontact"
-                      name="mode"
-                      label="Mode of Contact *"
-                      value={inputs.mode}
-                      onChange={handleInputVal}
-                      options={
-                        modeofcontact
-                          ? Object.entries(modeofcontact).map(
-                              ([value, label]) => ({
-                                value, // The key as value
-                                label, // The value as label
-                              })
-                            )
-                          : [] // Empty array before the data is loaded
-                      }
-                      disabled={!edits.communitcation}
-                      required
-                    />
-                  </div> */}
               </div>
             </div>
           </form>
@@ -2218,91 +2161,91 @@ const Landingprofile = () => {
 
             }}
           >
-<div className="basicProfileCont m-[10px] lg:m-[30px] p-[20px] lg:p-[40px] shadow-lg">
-      <div className="w-[100%] flex justify-between items-center mb-5">
-        <div className="text-[1.2rem] lg:text-[25px] font-bold">General Health</div>
-        {edits.gendrel ? (
-          <button
-            className="text-[15px] outline-none py-2 border-none px-3 bg-[#f95005] font-bold cursor-pointer text-white rounded"
-            type="button"
-            onClick={handlegenderalhealth}
-          >
-            Save&nbsp;&nbsp;
-            <i className="text-[15px] pi pi-check"></i>
-          </button>
-        ) : (
-          <div
-            onClick={() => setEdits({ ...edits, gendrel: true })}
-            className="text-[15px] py-2 px-3 bg-[#f95005] font-bold cursor-pointer text-[#fff] rounded"
-          >
-            Edit&nbsp;&nbsp;
-            <i className="text-[15px] pi pi-pen-to-square"></i>
-          </div>
-        )}
-      </div>
-      <div className="w-[100%] flex flex-col justify-center items-center">
-        <div className="w-[100%] flex justify-between mb-[20px]">
-          <div className="w-[48%]">
-            <TextInput
-              label="Height in CM *"
-              name="height"
-              id="height"
-              type="number"
-              onChange={handleInput}
-              value={inputs.height}
-              readonly={!edits.gendrel}
-              
-              required
-            />
-          </div>
-          <div className="w-[48%]">
-            <TextInput
-              label="Weight in KG *"
-              name="weight"
-              id="weight"
-              type="number"
-              onChange={handleInput}
-              value={inputs.weight}
-              readonly={!edits.gendrel}
-              required
-            />
-          </div>
-        </div>
+            <div className="basicProfileCont m-[10px] lg:m-[30px] p-[20px] lg:p-[40px] shadow-lg">
+              <div className="w-[100%] flex justify-between items-center mb-5">
+                <div className="text-[1.2rem] lg:text-[25px] font-bold">General Health</div>
+                {edits.gendrel ? (
+                  <button
+                    className="text-[15px] outline-none py-2 border-none px-3 bg-[#f95005] font-bold cursor-pointer text-white rounded"
+                    type="button"
+                    onClick={handlegenderalhealth}
+                  >
+                    Save&nbsp;&nbsp;
+                    <i className="text-[15px] pi pi-check"></i>
+                  </button>
+                ) : (
+                  <div
+                    onClick={() => setEdits({ ...edits, gendrel: true })}
+                    className="text-[15px] py-2 px-3 bg-[#f95005] font-bold cursor-pointer text-[#fff] rounded"
+                  >
+                    Edit&nbsp;&nbsp;
+                    <i className="text-[15px] pi pi-pen-to-square"></i>
+                  </div>
+                )}
+              </div>
+              <div className="w-[100%] flex flex-col justify-center items-center">
+                <div className="w-[100%] flex justify-between mb-[20px]">
+                  <div className="w-[48%]">
+                    <TextInput
+                      label="Height in CM *"
+                      name="height"
+                      id="height"
+                      type="number"
+                      onChange={handleInput}
+                      value={inputs.height}
+                      readonly={!edits.gendrel}
 
-        <div className="w-[100%] flex justify-between mb-[20px]">
-          <div className="w-[48%]">
-            <SelectInput
-              id="bloodgroup"
-              name="bloodgroup"
-              label="Blood Group *"
-              onChange={handleInput}
-              value={inputs.bloodgroup}
-              options={[
-                { value: "A+", label: "A+" },
-                { value: "A-", label: "A-" },
-                { value: "B+", label: "B+" },
-                { value: "B-", label: "B-" },
-                { value: "AB+", label: "AB+" },
-                { value: "AB-", label: "AB-" },
-                { value: "O+", label: "O+" },
-                { value: "O-", label: "O-" },
-              ]}
-              disabled={!edits.gendrel}
-              required
-            />
-          </div>
-          <div className="w-[48%]">
-            <TextInput
-              label="BMI"
-              name="bmi"
-              id="bmi"
-              type="number"
-              value={inputs.bmi}
-              readonly
-            />
-          </div>
-        </div>
-        <div className="w-[100%] lg:w-[100%] my-[1%]">
+                      required
+                    />
+                  </div>
+                  <div className="w-[48%]">
+                    <TextInput
+                      label="Weight in KG *"
+                      name="weight"
+                      id="weight"
+                      type="number"
+                      onChange={handleInput}
+                      value={inputs.weight}
+                      readonly={!edits.gendrel}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="w-[100%] flex justify-between mb-[20px]">
+                  <div className="w-[48%]">
+                    <SelectInput
+                      id="bloodgroup"
+                      name="bloodgroup"
+                      label="Blood Group *"
+                      onChange={handleInput}
+                      value={inputs.bloodgroup}
+                      options={[
+                        { value: "A+", label: "A+" },
+                        { value: "A-", label: "A-" },
+                        { value: "B+", label: "B+" },
+                        { value: "B-", label: "B-" },
+                        { value: "AB+", label: "AB+" },
+                        { value: "AB-", label: "AB-" },
+                        { value: "O+", label: "O+" },
+                        { value: "O-", label: "O-" },
+                      ]}
+                      readOnly={!edits.gendrel}
+                      required
+                    />
+                  </div>
+                  <div className="w-[48%]">
+                    <TextInput
+                      label="BMI"
+                      name="bmi"
+                      id="bmi"
+                      type="number"
+                      value={inputs.bmi}
+                      readonly
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] lg:w-[100%] my-[1%]">
                   <label className="w-[100%] text-[#f95005] font-bold text-[1.0rem] lg:text-[20px] text-start">
                     Medical Issue *{" "}
                   </label>
@@ -2344,8 +2287,8 @@ const Landingprofile = () => {
                     </p>
                   </div>
                 </div>
-      </div>
-    </div>
+              </div>
+            </div>
           </form>
 
           {/* Past or Present Health */}
@@ -2595,10 +2538,10 @@ const Landingprofile = () => {
                           <div className="w-[48%]">
                             <SelectInput
                               id="bp"
-                              name="bpValue"
+                              name="bp"
                               label="BP"
                               onChange={handleInputVal}
-                              value={inputs.bpValue}
+                              value={inputs.bp}
                               options={[
                                 { value: "low", label: "Low" },
                                 { value: "high", label: "High" },
@@ -2611,14 +2554,14 @@ const Landingprofile = () => {
                           </div>
                           <div div className="w-[48%]">
                             <TextInput
-                              id="bp"
-                              name="bp"
+                              id="bpValue"
+                              name="bpValue"
                               label="BP Value (120/80)"
                               // disabled={!options.ifbp || !edits.present}
                               disabled={!options.ifbp}
                               readonly={!edits.present}
                               required
-                              value={inputs.bp}
+                              value={inputs.bpValue}
                               onChange={(e) => handleInput(e)}
                             />
                           </div>
@@ -2626,113 +2569,6 @@ const Landingprofile = () => {
                       </div>
 
 
-                      {/* <div className="w-[100%] lg:w-[48%]">
-            <label className="w-[100%] text-[#f95005] font-bold text-[1rem] lg:text-[20px] text-start">
-              BP *
-            </label>
-            <div className="w-[100%] flex justify-start mt-[10px]">
-              <div className="mr-10">
-                <RadiobuttonInput
-                  id="painyes"
-                  value="yes"
-                  name="pain"
-                  label="Yes"
-                  selectedOption={options.bp ? "yes" : ""}
-                  onChange={() => {
-                    setOptions({
-                      ...options,
-                      bp: true,
-                    });
-                  }}
-                  readonly={!edits.present}
-                  required
-                />
-                  <RadiobuttonInput
-                    id="painno"
-                    value="no"
-                    name="pain"
-                    label="No"
-                    selectedOption={!options.bp ? "no" : ""}
-                    onChange={() => {
-                      setOptions({
-                        ...options,
-                        bp: false,
-                      });
-                    }}
-                    readonly={!edits.present}
-                    required
-                  />
-              </div>
-              <div className="w-[100%] flex justify-between mt-[20px]">
-              <div className="w-[48%]">
-                
-                </div></div>
-            </div>
-          </div> */}
-                      {/* <div className="w-[90%]" align="start">
-        <div>
-          <TextLabel label={"BP *"} />  
-        </div>
-        <div className="flex w-[48%] gap-x-10 mt-2 mb-[20px]">
-          <RadioButton
-            id="bpyes"
-            value="yes"
-            name="bp"
-            selectedOption={selectedOption.bp || ""}
-            onChange={(e) => {
-              setSelectedOption({
-                ...selectedOption,
-                bp: e.target.value, // Corrected: updating backpain instead of care
-              });
-            }}
-            label="Yes"
-            required
-          />
-
-          <RadioButton
-            id="bpno"
-            value="no"
-            name="bp"
-            selectedOption={selectedOption.bp || ""}
-            onChange={(e) => {
-              setSelectedOption({
-                ...selectedOption,
-                bp: e.target.value, // Corrected: updating backpain instead of care
-              });
-            }}
-            label="No"
-            required
-          />
-        </div>
-        <div className="flex flex-row w-[100%] justify-between">
-          <div className="mb-[20px] w-[48%]">
-            <SelectInput
-              id="bp"
-              name="bp"
-              label="BP"
-              options={[
-                { value: "low", label: "Low" },
-                { value: "high", label: "High" },
-              ]}
-              disabled={selectedOption.bp === "yes" ? false : true}
-              required
-              value={inputs.bp}
-              onChange={(e) => handleInput(e)}
-            />
-          </div>
-          <div className="mb-[20px] w-[48%]">
-            <TextInput
-              id="bp"
-              name="bpValue"
-              label="BP Value (120/80)"
-              disabled={selectedOption.bp === "yes" ? false : true}
-              required
-              value={inputs.bpValue}
-              onChange={(e) => handleInput(e)}
-            />
-          </div>
-        </div>
-      </div> */}
                     </div>
 
                   </div>
@@ -2969,9 +2805,9 @@ const Landingprofile = () => {
                   )}
                 </div>
                 {uploadDocuments.length > 0 ? (<><div className="text-gray-500 text-center mt-5">
-                    No Medical Documents Uploaded
-                  </div></>
-                  
+                  No Medical Documents Uploaded
+                </div></>
+
                 ) : (
                   <></>
                 )}
