@@ -110,7 +110,7 @@ const Landingprofile = () => {
           refDeliveryType: inputs.deliveryType,
           refKidsCount: inputs.kidsCount,
           refWeddingDate: inputs.anniversarydate
-            ? inputs.anniversarydate
+            ? new Date(inputs.anniversarydate)
             : null,
         },
       },
@@ -1567,8 +1567,8 @@ const Landingprofile = () => {
                           type="date"
                           className={`relative w-full mt-1 h-10 px-3 placeholder-transparent transition-all border-2 rounded outline-none peer 
               ${edits.personal ? "text-[#4c4c4e]" : "text-black"} border-[#b3b4b6] autofill:bg-white dateInput`}
-                          
-              onChange={(e) =>
+
+                          onChange={(e) =>
                             handleInput({
                               target: { name: "dob", value: e.value },
                             })
@@ -1640,9 +1640,9 @@ const Landingprofile = () => {
                             { value: "married", label: "Married" },
                           ]}
                           disabled={
-                             inputs.age > "18" ? false : true
+                            inputs.age > "18" ? false : true
                           }
-                          
+
                           readOnly={!edits.personal}
 
                           required

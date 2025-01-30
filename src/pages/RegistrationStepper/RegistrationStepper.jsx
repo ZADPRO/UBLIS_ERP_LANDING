@@ -20,6 +20,9 @@ import RadiobuttonInput from "../Inputs/RadiobuttonInput";
 import { Input } from "postcss";
 import { LuCalendarClock } from "react-icons/lu";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { IoMdArrowRoundForward } from "react-icons/io";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { Image } from 'primereact/image';
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
@@ -129,6 +132,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     // Parse the string into a JSON object
     return JSON.parse(decryptedString);
   };
+
 
   // CHANGES BY THIRU
   const [selectedValue, setSelectedValue] = useState(null); // No default selection
@@ -369,7 +373,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
   const [preferWeekDaysTiming, setpreferWeekDaysTiming] = useState([]);
   const [preferWeekEndTiming, setpreferWeekEndTiming] = useState([]);
-  const [browsher, setBrowsher] = useState();
+  const [browsher, setBrowsher] = useState([]);
   const [viewBrowsher, setViewBrowsher] = useState(false);
 
   const [sessiontype, setSessionType] = useState([]);
@@ -378,6 +382,24 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     weekends: 0,
     weekdays: 0,
   });
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const [branchSelected, setBranchSelected] = useState(false)
+
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === browsher.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Function to move to the previous image
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? browsher.length - 1 : prevIndex - 1
+    );
+  };
 
   const datePicker = (date) => {
     if (!date) return null; // Return null for invalid input
@@ -638,9 +660,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           if (data.token == false) {
             navigate("/expired");
           }
+          console.log(' -> Line Number ----------------------------------- 643',);
+          console.log('data', data)
           setMemberList(data.data); // Make sure this updates memberList
-          // setpreferTiming([]);
+          setBrowsher(data.browsher)
           setSessionType([]);
+          setBranchSelected(true)
         })
         .catch((err) => {
           console.error("Error: ", err);
@@ -941,6 +966,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   //   }
   // };
 
+  const YourComponent = ({ imageUrl }) => {
+    const [isZoomed, setIsZoomed] = useState(false);
+  }
+
   return (
     <div className="w-[100%] lg:w-[100%] h-[100vh] bg-black/80 blur-[0.2px]  flex justify-center items-center fixed z-50">
       <div
@@ -953,6 +982,118 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
+              }}
+            >
+              <div className="w-full h-[7vh] flex justify-center items-center">
+                <div className="w-[90%] justify-between flex h-[7vh] items-center">
+                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+                    Class & Fees Structure
+                  </h1>
+                  <div
+                    onClick={() => {
+                      closeregistration();
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div>
+                <div className="w-[90%] flex md:flex-row flex-col  justify-star align-items-center md:gap-4 gap-1 m-[.5rem]">
+                  <label className="text-[#ff5001] text-[1.2rem]">Select Branch :</label>
+                  <div className="md:w-[48%] w-[80%]">
+                    <SelectInput
+                      id="branch"
+                      name="branch"
+                      // label="Branch *"
+                      options={branchOptions}
+                      required
+                      value={inputs.branch}
+                      onChange={(e) => {
+
+                        setPackageSelect(1), handleInput(e);
+                      }}
+                    />
+                  </div>
+                </div>
+                {branchSelected ?
+                  <>
+                    <div className="w-[100%] flex flex-row justify-center align-items-center">
+                      <div
+                        className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border border-none p-1"
+                        onClick={prevImage}
+                      >
+                        <IoMdArrowRoundBack />
+                      </div>
+                      <div className="w-[70%] my-2">
+
+                        <Image
+                          src={browsher[currentImageIndex].refBroLink}
+                          alt="Image"
+                          preview
+                          className="md:w-[40%] w-[90%]"
+                        // width="40%" 
+                        />
+
+                        {/* <img
+                          className="md:w-[43%] w-[95%]"
+                          src={browsher[currentImageIndex].refBroLink}
+                          alt="Browsher"
+                        /> */}
+                      </div>
+                      <div
+                        className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border border-none p-1"
+                        onClick={nextImage}
+                      >
+                        <IoMdArrowRoundForward />
+                      </div>
+                    </div></>
+                  :
+                  <></>}
+
+              </div>
+
+
+              {branchSelected ?
+                <>
+                  <hr />
+                  <div className="w-[90%] lg:w-[95%] h-[10vh] md:m-0 m-4 md:gap-0 gap-3 flex md:flex-row flex-col justify-between items-center">
+                    <div className="flex flex-row">
+                      <input
+                        className="peer h-[20px] w-[20px] cursor-pointer appearance-none border-4 border-[#b3b4b6] bg-white transition-colors checked:border-[#ff5001] checked:bg-[#ff5001] checked:before:content-['✓'] checked:before:text-[#ff5001] checked:hover:border-[#ff5001] checked:hover:bg-[#ff5001] focus:outline-none checked:focus:border-[#ff5001] checked:focus:bg-[#ff5001] focus-visible:outline-none disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50"
+                        type="checkbox"
+                        required
+                      />
+                      <label
+                        className={`cursor-pointer w-full text-start pl-2 text-slate-500 text-center peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 `}
+                      >
+                        I Understand the Fees Structure & Class Timing
+                      </label>
+
+                    </div>
+                    <button
+                      type="submit"
+                      className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                    >
+                      Next&nbsp;&nbsp;
+                      <i className="fa-solid fa-arrow-right"></i>
+                    </button>
+                  </div></>
+                :
+                <></>
+              }
+
+
+            </form>
+          </>
+        )}
+        {stepperactive === 2 && (
+          <>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setStepperactive((prev) => (prev < 3 ? prev + 1 : prev));
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -1643,10 +1784,19 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 </div>
               </div>
               <hr />
-              <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-end items-center">
+              <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+                <button
+                  type="button"
+                  className="bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded my-4 transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                  onClick={handleBack}
+                >
+                  <i className="fa-solid fa-arrow-left"></i>
+                  &nbsp;&nbsp;Back
+                </button>
                 <button
                   type="submit"
                   className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                // onClick={handleNext}
                 >
                   Next&nbsp;&nbsp;
                   <i className="fa-solid fa-arrow-right"></i>
@@ -1656,7 +1806,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           </>
         )}
 
-        {stepperactive === 2 && (
+        {stepperactive === 3 && (
           <>
 
             {viewBrowsher ? <>
@@ -1684,8 +1834,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     console.log('prev', prev)
                     console.log("before \n", prev);
                     const updatedValue = !options.medicalIssue
-                      ? (prev < 3 ? prev + 4 : prev)
-                      : (prev < 3 ? prev + 1 : prev);
+                      ? (prev < 4 ? prev + 4 : prev)
+                      : (prev < 4 ? prev + 1 : prev);
                     console.log("after \n", updatedValue);
                     return updatedValue; // Return the updated value
                   });
@@ -2047,13 +2197,13 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           </>
         )}
 
-        {stepperactive === 3 && (
+        {stepperactive === 4 && (
           <>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
 
-                setStepperactive((prev) => (prev < 4 ? prev + 1 : prev));
+                setStepperactive((prev) => (prev < 5 ? prev + 1 : prev));
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -2331,12 +2481,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           </>
         )}
 
-        {stepperactive === 4 && (
+        {stepperactive === 5 && (
           <>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                setStepperactive((prev) => (prev < 5 ? prev + 1 : prev));
+                setStepperactive((prev) => (prev < 6 ? prev + 1 : prev));
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -2522,7 +2672,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
           </>
         )}
 
-        {stepperactive === 5 && (
+        {stepperactive === 6 && (
           <>
             <form
               onSubmit={(e) => {
@@ -2536,7 +2686,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   return;
                 }
 
-                setStepperactive((prev) => (prev < 6 ? prev + 1 : prev));
+                setStepperactive((prev) => (prev < 7 ? prev + 1 : prev));
               }}
             >
               <div className="w-full h-[7vh] flex justify-center items-center">
@@ -2696,7 +2846,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
           </>
         )}
-        {stepperactive === 6 && (
+        {stepperactive === 7 && (
           <>
             <form
               onSubmit={(e) => {
@@ -2865,5 +3015,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
     </div>
   );
 };
+
+// last changes
 
 export default RegistrationStepper;

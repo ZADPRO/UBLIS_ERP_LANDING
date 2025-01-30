@@ -104,6 +104,9 @@ export const Stepper = () => {
         .catch((err) => {
           console.error("Error: ", err);
           setSubmitloadingStatus(false); // Turn off the loading spinner
+
+          console.log('===>', err);
+
           setFormerror2({
             errorstatus: true,
             errormessage:
@@ -313,7 +316,7 @@ export const Stepper = () => {
     if (input.password.length <= 0) {
       setFormerror2({
         errorstatus: true,
-        errormessage: "Enter Password",
+        // errormessage: "Enter Password",
       });
 
       return 0;
@@ -322,7 +325,7 @@ export const Stepper = () => {
     if (input.password.length < 8) {
       setFormerror2({
         errorstatus: true,
-        errormessage: "Password Should be in Minimum 8 characters",
+        // errormessage: "Password Should be in Minimum 8 characters",
       });
 
       return 0;
@@ -331,7 +334,7 @@ export const Stepper = () => {
     if (input.repassword.length <= 0) {
       setFormerror2({
         errorstatus: true,
-        errormessage: "Enter Confirm Password",
+        // errormessage: "Enter Confirm Password",
       });
 
       return 0;
@@ -340,7 +343,7 @@ export const Stepper = () => {
     if (input.repassword != input.password) {
       setFormerror2({
         errorstatus: true,
-        errormessage: "Confirm Password Dosen't Match",
+        // errormessage: "Confirm Password Dosen't Match",
       });
 
       return 0;
@@ -394,6 +397,24 @@ export const Stepper = () => {
         });
       });
   };
+  const isPasswordValid = input.password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(input.password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(input.password);
+  const isPasswordMatch = input.password === input.repassword && input.repassword !== "";
+
+  const CircleIcon = ({ isValid }) => (
+    <span
+      className={`w h-5 inline-flex items-center justify-center rounded-full text-white text-xs font-bold ${isValid ? "bg-white" : "bg-white"
+        }`}
+    >
+      {isValid ? (
+        <span className="text-green-500">( ✔ )</span> // Green checkmark
+      ) : (
+        <span className="text-red-500">( ✖ )</span> // Red cross
+      )}
+    </span>
+  );
+
 
   return (
     <div className="w-[100%]">
@@ -611,11 +632,33 @@ export const Stepper = () => {
                   </div>
                 </div>
               </div>
+              <div className="w-[100%]" align="center">
+                <div className="w-[90%] lg:w-[80%] flex justify-between">
+                  <div className="w-[100%] mt-3 " align="start">
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={isPasswordValid} /> At least 8 characters
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={hasUppercase} />  At least one uppercase letter
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={hasSpecialChar} /> At least one special character
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={isPasswordMatch} /> Passwords must match
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="w-full -mt-10 font-semibold">
-              <div className="w-[90%] lg:w-[80%] transition-all duration-300">
+
+
+
+            <div className="w-full mt-3  font-semibold">
+              <div className="w-[90%] lg:w-[80%]  transition-all duration-300">
                 {formerror2.errorstatus ? (
                   <ErrorMessage message={formerror2.errormessage} />
+
                 ) : null}
               </div>
             </div>
