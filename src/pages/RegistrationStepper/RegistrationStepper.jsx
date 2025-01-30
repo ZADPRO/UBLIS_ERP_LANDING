@@ -23,9 +23,12 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Image } from 'primereact/image';
+import { Checkbox } from "primereact/checkbox";
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const [options, setOptions] = useState({
@@ -978,114 +981,104 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
       >
         {stepperactive === 1 && (
           <>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
-              }}
+           <form
+  onSubmit={(e) => {
+    e.preventDefault();
+    setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
+  }}
+>
+  <div className="w-full h-[5vh] flex justify-center items-center">
+    <div className="w-[90%] justify-between flex h-[7vh] items-center">
+      <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+        Class & Fees Structure
+      </h1>
+      <div
+        onClick={() => {
+          closeregistration();
+        }}
+      >
+        <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div>
+    <div className="w-[90%] flex flex-col md:flex-row  items-center  m-[.5rem]">
+      <label className="text-[#ff5001] w-[50%] text-[1.2rem]">Select Branch :</label>
+      <div className="w-full md:w-[48%]">
+        <SelectInput
+          id="branch"
+          name="branch"
+          options={branchOptions}
+          required
+          value={inputs.branch}
+          onChange={(e) => {
+            setPackageSelect(1), handleInput(e);
+          }}
+        />
+      </div>
+    </div>
+    <div>
+    {branchSelected ? (
+      <>
+        <div className="w-full flex justify-center items-center">
+          <div
+            className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
+            onClick={prevImage}
+          >
+            <IoMdArrowRoundBack />
+          </div>
+          <div className="w-[70%] my-2">
+            <Image
+              src={browsher[currentImageIndex].refBroLink}
+              alt="Image"
+              preview
+              className="w-[90%] md:w-[40%]"
+            />
+          </div>
+          <div
+            className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
+            onClick={nextImage}
+          >
+            <IoMdArrowRoundForward />
+          </div>
+        </div>
+      </>
+    ) : null}
+  </div>
+
+  <hr />
+  <div className="bg-white">
+    {branchSelected ? (
+      <>
+        <hr />
+        <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+          <div className="flex flex-row ">
+          <div className="card flex justify-content-center  ">
+            <Checkbox required variant="filled" onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
+        </div>
+            <label
+              className="cursor-pointer w-full text-start pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
             >
-              <div className="w-full h-[7vh] flex justify-center items-center">
-                <div className="w-[90%] justify-between flex h-[7vh] items-center">
-                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-                    Class & Fees Structure
-                  </h1>
-                  <div
-                    onClick={() => {
-                      closeregistration();
-                    }}
-                  >
-                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div>
-                <div className="w-[90%] flex md:flex-row flex-col  justify-star align-items-center md:gap-4 gap-1 m-[.5rem]">
-                  <label className="text-[#ff5001] text-[1.2rem]">Select Branch :</label>
-                  <div className="md:w-[48%] w-[80%]">
-                    <SelectInput
-                      id="branch"
-                      name="branch"
-                      // label="Branch *"
-                      options={branchOptions}
-                      required
-                      value={inputs.branch}
-                      onChange={(e) => {
+              I Understand the Fees Structure & Class Timing
+            </label>
+          </div>
 
-                        setPackageSelect(1), handleInput(e);
-                      }}
-                    />
-                  </div>
-                </div>
-                {branchSelected ?
-                  <>
-                    <div className="w-[100%] flex flex-row justify-center align-items-center">
-                      <div
-                        className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border border-none p-1"
-                        onClick={prevImage}
-                      >
-                        <IoMdArrowRoundBack />
-                      </div>
-                      <div className="w-[70%] my-2">
+          <button
+            type="submit"
+            className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+          >
+            Next&nbsp;&nbsp;
+            <i className="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </>
+    ) : null}
+  </div>
+  </div>
+ 
+</form>
 
-                        <Image
-                          src={browsher[currentImageIndex].refBroLink}
-                          alt="Image"
-                          preview
-                          className="md:w-[40%] w-[90%]"
-                        // width="40%" 
-                        />
-
-                        {/* <img
-                          className="md:w-[43%] w-[95%]"
-                          src={browsher[currentImageIndex].refBroLink}
-                          alt="Browsher"
-                        /> */}
-                      </div>
-                      <div
-                        className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border border-none p-1"
-                        onClick={nextImage}
-                      >
-                        <IoMdArrowRoundForward />
-                      </div>
-                    </div></>
-                  :
-                  <></>}
-
-              </div>
-
-
-              {branchSelected ?
-                <>
-                  <hr />
-                  <div className="w-[90%] lg:w-[95%] h-[10vh] md:m-0 m-4 md:gap-0 gap-3 flex md:flex-row flex-col justify-between items-center">
-                    <div className="flex flex-row">
-                      <input
-                        className="peer h-[20px] w-[20px] cursor-pointer appearance-none border-4 border-[#b3b4b6] bg-white transition-colors checked:border-[#ff5001] checked:bg-[#ff5001] checked:before:content-['✓'] checked:before:text-[#ff5001] checked:hover:border-[#ff5001] checked:hover:bg-[#ff5001] focus:outline-none checked:focus:border-[#ff5001] checked:focus:bg-[#ff5001] focus-visible:outline-none disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50"
-                        type="checkbox"
-                        required
-                      />
-                      <label
-                        className={`cursor-pointer w-full text-start pl-2 text-slate-500 text-center peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 `}
-                      >
-                        I Understand the Fees Structure & Class Timing
-                      </label>
-
-                    </div>
-                    <button
-                      type="submit"
-                      className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-                    >
-                      Next&nbsp;&nbsp;
-                      <i className="fa-solid fa-arrow-right"></i>
-                    </button>
-                  </div></>
-                :
-                <></>
-              }
-
-
-            </form>
           </>
         )}
         {stepperactive === 2 && (
@@ -1175,7 +1168,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   className="w-[90%] mb-[20px] flex justify-between"
                   align="start"
                 >
-                  <div className=" w-[48%]">
+                  <div className=" w-[35%]">
                     <TextInput
                       id="phonenumber"
                       type="number"
@@ -1187,6 +1180,36 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       onChange={(e) => handleInput(e)}
                     />
                   </div>
+                  <div className="w-[35%] lg:w-[40%]">
+                    <TextInput
+                      id="whatsappno"
+                      type="number"
+                      name="whatsappno"
+                      placeholder="your name"
+                      label={`WhatsApp Number * `}
+                      required
+                      value={inputs.whatsappno}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setInputs({
+                        ...inputs,
+                        whatsappno: inputs.phoneno,
+                      });
+                    }}
+                    className="w-[20%] lg:w-[20%] border-2 border-[#ff621b] bg-[#ff621b] text-[#fff] hover:bg-[#fff] hover:text-[#ff621b] transition-all duration-300 cursor-pointer font-bold rounded text-center text-[15px] flex justify-center items-center"
+                  >
+                    Use Same Number
+                  </div>
+                
+                </div>
+
+                <div
+                  className="w-[90%] mb-[20px] flex flex-row   justify-between"
+                  align="start"
+                >
                   <div className="w-[48%]">
                     {/* <TextInput
                       id="emergencyno"
@@ -1209,35 +1232,18 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       onChange={(e) => handleInput(e)}
                     />
                   </div>
+                  <div className="w-[48%]" align="start">
+                  <TextInput
+                    id="father"
+                    type="text"
+                    name="caretakername"
+                    placeholder="your name"
+                    label="Emergency Contact Name & Relationship*"
+                    required
+                    value={inputs.caretakername}
+                    onChange={(e) => handleInput(e)}
+                  />
                 </div>
-
-                <div
-                  className="w-[90%] mb-[20px] flex flex-wrap  justify-between"
-                  align="start"
-                >
-                  <div className="w-[75%] lg:w-[75%]">
-                    <TextInput
-                      id="whatsappno"
-                      type="number"
-                      name="whatsappno"
-                      placeholder="your name"
-                      label={`WhatsApp Number * `}
-                      required
-                      value={inputs.whatsappno}
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </div>
-                  <div
-                    onClick={() => {
-                      setInputs({
-                        ...inputs,
-                        whatsappno: inputs.phoneno,
-                      });
-                    }}
-                    className="w-[30%] lg:w-[20%] border-2 border-[#ff621b] bg-[#ff621b] text-[#fff] hover:bg-[#fff] hover:text-[#ff621b] transition-all duration-300 cursor-pointer font-bold rounded text-center text-[15px] flex justify-center items-center"
-                  >
-                    Use Same Number
-                  </div>
                 </div>
 
                 <div
@@ -1246,7 +1252,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 >
                   {/* <div className="w-[68%]"> */}
 
-                  <div className="flex flex-col w-[70%] -mt-[13px]">
+                  <div className="flex flex-col w-[50%] -mt-[13px]">
                     <label className="bg-[#fff] text-[#ff621b] -mb-[15px] z-50 w-[120px] ml-[10px]">
                       &nbsp;Date of Birth *
                     </label>
@@ -1276,7 +1282,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       onChange={(e) => handleInput(e)}
                     /> */}
                   {/* </div> */}
-                  <div className="w-[28%]">
+                  <div className="w-[18%]">
                     <TextInput
                       id="age"
                       type="tel"
@@ -1289,10 +1295,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       onChange={(e) => handleInput(e)}
                     />
                   </div>
-                </div>
-
-                <div
-                  className="w-[90%] mb-[20px] flex justify-between"
+                  <div
+                  className="w-[30%]  flex justify-between"
                   align="start"
                 >
                   <SelectInput
@@ -1310,6 +1314,9 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   />
                 </div>
 
+                </div>
+
+              
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
                   align="start"
@@ -1402,18 +1409,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
                 </div>
 
-                <div className="w-[90%] mb-[20px]" align="start">
-                  <TextInput
-                    id="father"
-                    type="text"
-                    name="caretakername"
-                    placeholder="your name"
-                    label="Father / Spouse's Name *"
-                    required
-                    value={inputs.caretakername}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
+             
 
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
@@ -2003,7 +1999,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
 
                   {/* Conditionally render the notes */}
-                  {packageSelect > 3 && (
+                  {/* {packageSelect > 3 && (
                     <div>
                       <div className="w-[90%] text-2xl text-[#ff5001] mb-[25px] flex justify-start gap-3">
                         <button onClick={(e) => {
@@ -2016,7 +2012,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
                       </div>
                     </div>
-                  )}
+                  )} */}
                   {preferWeekDaysTimingOption.length > 0 ?
                     <>
                       <div className="w-[90%] flex justify-between mb-[20px]">
@@ -2168,7 +2164,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     </div>
                     <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
                       <p>
-                        Note * : If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
+                        <span className="text-sm ">Note * :</span>  If you have any medical history, any medical problems, or feel that you have any body pain or other health issues, click 'Yes.' Otherwise, click 'No'.
                       </p>
                     </div>
                   </div>
@@ -2801,8 +2797,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                 ))}
                 <div>
                   {" "}
-                  <p className="text-[#ff5001] p-5 mt-10">
-                    Note: If you need to upload a medical document, please do so
+                  <p className="text-[#ff5001] w-[90%] p-5 mt-10">
+                    <span className="text-xl ">Note * :</span>  If you need to upload a medical document, please do so
                     now (the file size must be below 5 MB). Otherwise, click the
                     delete icon to remove it and proceed to the next step.
                   </p>
@@ -3016,6 +3012,6 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   );
 };
 
-// last changes
+// last changes by soniya
 
 export default RegistrationStepper;

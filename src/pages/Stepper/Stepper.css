@@ -1,4 +1,7 @@
 /* Stepper.css */
+#email{
+  padding-top: 4px;
+}
 
 /* Next Step (Slide from right to left with easing and fade) */
 .slide-enter {

@@ -9,7 +9,8 @@ const RegistrationPopup = ({ handlecloseregister, openregistration }) => {
         </div>
         <div className="flex">
           <p className=" text-center">
-          Join our yoga classes and embark on your wellness journey! Register now to get started.
+          Join our yoga classes and begin your wellness journey today!
+           Register now with a one-time registration fee of ₹300 (including GST).
           </p>
         </div>
         <div className="mt-3 flex justify-around">

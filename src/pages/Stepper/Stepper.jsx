@@ -104,9 +104,6 @@ export const Stepper = () => {
         .catch((err) => {
           console.error("Error: ", err);
           setSubmitloadingStatus(false); // Turn off the loading spinner
-
-          console.log('===>', err);
-
           setFormerror2({
             errorstatus: true,
             errormessage:
@@ -291,66 +288,20 @@ export const Stepper = () => {
 
   const [formerror2, setFormerror2] = useState({
     errorstatus: false,
-    errormessage: "",
+    errorstatus:"",
   });
 
   const submitform2 = () => {
-    if (input.username.length < 6) {
+    if (!isPasswordValid || !hasUppercase || !hasSpecialChar || !isPasswordMatch) {
       setFormerror2({
         errorstatus: true,
-        errormessage: "Username Must be Above 6 Characters",
+        errormessage: "Password does not meet the required criteria.",
       });
-
-      return 0;
+      return; // Stop the form submission
     }
-
-    if (!verify) {
-      setFormerror2({
-        errorstatus: true,
-        errormessage: "Username Must be Unique",
-      });
-
-      return 0;
-    }
-
-    if (input.password.length <= 0) {
-      setFormerror2({
-        errorstatus: true,
-        // errormessage: "Enter Password",
-      });
-
-      return 0;
-    }
-
-    if (input.password.length < 8) {
-      setFormerror2({
-        errorstatus: true,
-        // errormessage: "Password Should be in Minimum 8 characters",
-      });
-
-      return 0;
-    }
-
-    if (input.repassword.length <= 0) {
-      setFormerror2({
-        errorstatus: true,
-        // errormessage: "Enter Confirm Password",
-      });
-
-      return 0;
-    }
-
-    if (input.repassword != input.password) {
-      setFormerror2({
-        errorstatus: true,
-        // errormessage: "Confirm Password Dosen't Match",
-      });
-
-      return 0;
-    }
-
+  
     setSubmitloadingStatus(true);
-
+  
     const Dob = datePickerToMyFormat(input.dob);
     Axios.post(import.meta.env.VITE_API_URL + "users/signup", {
       temp_su_fname: input.fname,
@@ -368,17 +319,14 @@ export const Stepper = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
-
+  
         if (data.success) {
-          console.log("True part");
           setSuccessState(true);
           setTimeout(() => {
             navigate("/signin");
           }, 5000);
         } else {
-          // If status is false in the response or an error status, handle it
-          console.log("False part");
-          setSubmitloadingStatus(false); // Turn off the loading spinner
+          setSubmitloadingStatus(false);
           setFormerror2({
             errorstatus: true,
             errormessage: data.message || "An error occurred during signup.",
@@ -386,9 +334,7 @@ export const Stepper = () => {
         }
       })
       .catch((err) => {
-        // Catching any 400 status or general errors
-        console.error("Error: ", err);
-        setSubmitloadingStatus(false); // Turn off the loading spinner
+        setSubmitloadingStatus(false);
         setFormerror2({
           errorstatus: true,
           errormessage:
@@ -397,6 +343,8 @@ export const Stepper = () => {
         });
       });
   };
+  
+
   const isPasswordValid = input.password.length >= 8;
   const hasUppercase = /[A-Z]/.test(input.password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(input.password);
@@ -404,8 +352,9 @@ export const Stepper = () => {
 
   const CircleIcon = ({ isValid }) => (
     <span
-      className={`w h-5 inline-flex items-center justify-center rounded-full text-white text-xs font-bold ${isValid ? "bg-white" : "bg-white"
-        }`}
+      className={`w h-5 inline-flex items-center justify-center rounded-full text-white text-xs font-bold ${
+         isValid ? "bg-white" : "bg-white"
+      }`}
     >
       {isValid ? (
         <span className="text-green-500">( ✔ )</span> // Green checkmark
@@ -414,8 +363,6 @@ export const Stepper = () => {
       )}
     </span>
   );
-
-
   return (
     <div className="w-[100%]">
       <div
@@ -424,11 +371,11 @@ export const Stepper = () => {
       >
         {stepperactive === 1 && (
           <>
-            <h1 className="pt-4 text-[#ff5001] text-[25px] font-bold">
+            <h1 className="pt-4 W-[100%] lg:w-[100%] flex justify-center text-[#ff5001] text-[25px] font-bold">
               Your Personal Details
             </h1>
-            <div className="w-[100%] h-[45vh] flex flex-col justify-center">
-              <div className="w-[100%]" align="center">
+            <div className="w-[100%] lg:w-[100%] h-[45vh] flex flex-col justify-center">
+              <div className="w-[100%] " align="center">
                 <div className="w-[90%] mb-4 lg:w-[80%] flex justify-between">
                   <div className="w-[49%]" align="start">
                     <TextInput
@@ -500,8 +447,8 @@ export const Stepper = () => {
               </div>
 
               <div className="pt-2 w-[100%]" align="center">
-                <div className="w-[90%] lg:w-[80%] flex justify-between">
-                  <div className="w-[100%]" align="start">
+                <div className="w-[90%] lg:w-[80%]  flex justify-between">
+                  <div className="w-[100%] " align="start">
                     {/* <TextInput
                       id="email"
                       name="email"
@@ -512,6 +459,7 @@ export const Stepper = () => {
                       onChange={handleinput}
                     /> */}
                     <UsernameInput
+                  
                       id="email"
                       name="email"
                       label="Email"
@@ -519,13 +467,15 @@ export const Stepper = () => {
                       onChange={handleinput}
                       required
                       isInvalid={emailVerify}
-                    />
+                      style={{ paddingTop: "4px" }}
+                     
+                      />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full -mt-10 font-semibold">
-              <div className="w-[90%] lg:w-[80%] transition-all duration-300">
+            <div className="w-full lg:w-[100%] flex justify-center  font-semibold">
+              <div className="w-[90%] lg:w-[80%] text-center transition-all duration-300">
                 {formerror1.errorstatus ? (
                   <ErrorMessage message={formerror1.errormessage} />
                 ) : null}
@@ -546,7 +496,7 @@ export const Stepper = () => {
         )}
         {stepperactive === 2 && (
           <>
-            <h1 className="pt-4 text-[#ff5001] text-[25px] font-bold">
+            <h1 className="pt-4 mb-4 flex justify-center items-center mt-5 text-[#ff5001] text-[25px] font-bold">
               Your Login Details
             </h1>
             <div className="w-[100%] h-[45vh] flex flex-col justify-center">
@@ -614,6 +564,7 @@ export const Stepper = () => {
                       helperText="Password should be at least 8 characters."
                       maxLength={30}
                     />
+                     
                   </div>
                 </div>
               </div>
@@ -630,35 +581,37 @@ export const Stepper = () => {
                       maxLength={30}
                     />
                   </div>
+
                 </div>
+              </div>
+              <div>
+            
               </div>
               <div className="w-[100%]" align="center">
                 <div className="w-[90%] lg:w-[80%] flex justify-between">
                   <div className="w-[100%] mt-3 " align="start">
-                    <p className="flex items-center gap-2">
-                      <CircleIcon isValid={isPasswordValid} /> At least 8 characters
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <CircleIcon isValid={hasUppercase} />  At least one uppercase letter
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <CircleIcon isValid={hasSpecialChar} /> At least one special character
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <CircleIcon isValid={isPasswordMatch} /> Passwords must match
-                    </p>
-                  </div>
-                </div>
-              </div>
+                  <p className="flex items-center gap-2">
+                <CircleIcon isValid={isPasswordValid} /> At least 8 characters
+              </p>
+              <p className="flex items-center gap-2">
+                <CircleIcon isValid={hasUppercase } />  At least one uppercase letter
+              </p>
+              <p className="flex items-center gap-2">
+                <CircleIcon isValid={hasSpecialChar } /> At least one special character
+              </p>
+              <p className="flex items-center gap-2">
+                <CircleIcon isValid={isPasswordMatch } /> Passwords must match
+              </p>
+              </div></div>
+            
             </div>
-
-
-
-            <div className="w-full mt-3  font-semibold">
-              <div className="w-[90%] lg:w-[80%]  transition-all duration-300">
+              
+            </div>
+          
+            <div className="w-full mt-5 flex justify-center font-semibold">
+              <div className="w-[90%] lg:w-[80%] text-center transition-all duration-300">
                 {formerror2.errorstatus ? (
                   <ErrorMessage message={formerror2.errormessage} />
-
                 ) : null}
               </div>
             </div>
@@ -679,7 +632,7 @@ export const Stepper = () => {
                   </div>
                 </div>
               ) : (
-                <div className="w-[80%] flex justify-end">
+                <div className="w-[80%]  flex justify-end">
                   {submitloadingStatus ? (
                     <>
                       <svg className="loadersvg my-4" viewBox="25 25 50 50">

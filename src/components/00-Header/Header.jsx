@@ -239,7 +239,7 @@ export default function Header() {
   const closeregistration = () => {
     setRegistrationmodal(false);
   };
-
+  const [showModal, setShowModal] = useState(false);
   return (
     <div className="header">
       {openmenu ? (
@@ -288,19 +288,47 @@ export default function Header() {
           {isLoggedIn ? (
             <>
               {useStatus.followUpCount ? (
+          <div className="relative">
+          {/* Register Button */}
+          <button
+            className="lg:flex hidden"
+            style={{
+              border: "2px solid #f95005",
+              padding: "5px 40px",
+              borderRadius: "8px",
+              color: "#f95005",
+              fontWeight: "bold",
+            }}
+            onClick={() => setShowModal(true)}
+          >
+            Register
+          </button>
+    
+          {/* Modal (Popup) */}
+          {showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+                <h2 className="text-lg font-bold text-gray-800">
+                  Registration Fee Required
+                </h2>
+                <p className="text-gray-600 mt-2">
+                 of ₹300 (including GST) is applicable .
+                </p>
                 <button
-                  className="lg:flex hidden"
-                  style={{
-                    border: "2px solid #f95005",
-                    padding: "5px 40px",
-                    borderRadius: "8px",
-                    color: "#f95005",
-                    fontWeight: "bold",
+                  className="mt-4 bg-[#f95005] text-white px-6 py-2 rounded-lg"
+                
+                  onClick={() => {
+                    setShowModal(false); 
+                    setRegistrationmodal(true);
                   }}
-                  onClick={() => setRegistrationmodal(true)}
                 >
-                  Register
+                  OK
                 </button>
+              </div>
+            </div>
+          )}
+        </div>
+          
               ) : null}
               {/* User Image */}
               <img

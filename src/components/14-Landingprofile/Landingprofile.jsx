@@ -1614,7 +1614,7 @@ const Landingprofile = () => {
                       </div>
                       <div className="w-[100%] lg:w-[48%]">
                         <TextInput
-                          label="Father / Spouse's Name *"
+                          label="Emergency Contact Name / Relationship *"
                           name="guardianname"
                           id="guardianname"
                           type="text"
@@ -2281,7 +2281,7 @@ const Landingprofile = () => {
                   </div>
                   <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
                     <p>
-                      Note * : If you have any medical history, any medical
+                    <span className="text-xl">Note * :</span>  If you have any medical history, any medical
                       problems, or feel that you have any body pain or other
                       health issues, click 'Yes.' Otherwise, click 'No'.
                     </p>
