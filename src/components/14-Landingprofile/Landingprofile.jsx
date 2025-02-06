@@ -371,6 +371,9 @@ const Landingprofile = () => {
       } else if (name === "maritalstatus" && value === "single") {
         updatedInputs.anniversarydate = "";
       }
+      if (name === "age" && value < 20) {
+        updatedInputs.maritalstatus = "";
+      }
 
       return updatedInputs;
     });
@@ -1641,7 +1644,7 @@ const Landingprofile = () => {
                             { value: "married", label: "Married" },
                           ]}
                           disabled={
-                            inputs.age > "18" ? false : true
+                            inputs.age > "20" ? false : true
                           }
 
                           readOnly={!edits.personal}
