@@ -116,25 +116,6 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* <div className="gridFormTemp w-full">
-          <div className="ourStoryCont w-full md:w-6/12 mx-auto">
-            <h3>Our Story</h3>
-            <p>
-              Founded in (year ) , Brands New Outlet was born out of a passion
-              for fashion and a desire to bring global styles to Switzerland.
-              Starting as a small online store, we’ve grown into a trusted
-              platform that serves fashion enthusiasts across the country.{" "}
-            </p>
-            <p>
-              Building on quality, innovation, and customer satisfaction, we
-              improve our range and services and keep Brands New Outlet at the
-              heart of the Swiss fashion scene.{" "}
-            </p>
-          </div>
-          <div className="ourStoryBg w-full md:w-6/12 mx-auto">
-            <h4>Our Story</h4>
-          </div>
-        </div> */}
 
         <div className="welcomeUblis">
           <h2>

@@ -981,103 +981,103 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
       >
         {stepperactive === 1 && (
           <>
-           <form
-  onSubmit={(e) => {
-    e.preventDefault();
-    setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
-  }}
->
-  <div className="w-full h-[5vh] flex justify-center items-center">
-    <div className="w-[90%] justify-between flex h-[7vh] items-center">
-      <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
-        Class & Fees Structure
-      </h1>
-      <div
-        onClick={() => {
-          closeregistration();
-        }}
-      >
-        <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
-      </div>
-    </div>
-  </div>
-  <hr />
-  <div>
-    <div className="w-[90%] flex flex-col md:flex-row  items-center  m-[.5rem]">
-      <label className="text-[#ff5001] w-[50%] text-[1.2rem]">Select Branch :</label>
-      <div className="w-full md:w-[48%]">
-        <SelectInput
-          id="branch"
-          name="branch"
-          options={branchOptions}
-          required
-          value={inputs.branch}
-          onChange={(e) => {
-            setPackageSelect(1), handleInput(e);
-          }}
-        />
-      </div>
-    </div>
-    <div>
-    {branchSelected ? (
-      <>
-        <div className="w-full flex justify-center items-center">
-          <div
-            className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
-            onClick={prevImage}
-          >
-            <IoMdArrowRoundBack />
-          </div>
-          <div className="w-[70%] my-2">
-            <Image
-              src={browsher[currentImageIndex].refBroLink}
-              alt="Image"
-              preview
-              className="w-[90%] md:w-[40%]"
-            />
-          </div>
-          <div
-            className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
-            onClick={nextImage}
-          >
-            <IoMdArrowRoundForward />
-          </div>
-        </div>
-      </>
-    ) : null}
-  </div>
-
-  <hr />
-  <div className="bg-white">
-    {branchSelected ? (
-      <>
-        <hr />
-        <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
-          <div className="flex flex-row ">
-          <div className="card flex justify-content-center  ">
-            <Checkbox required variant="filled" onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
-        </div>
-            <label
-              className="cursor-pointer w-full text-start pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setStepperactive((prev) => (prev < 2 ? prev + 1 : prev));
+              }}
             >
-              I Understand the Fees Structure & Class Timing
-            </label>
-          </div>
+              <div className="w-full h-[5vh] flex justify-center items-center">
+                <div className="w-[90%] justify-between flex h-[7vh] items-center">
+                  <h1 className="text-[20px] justify-center font-semibold text-[#ff5001]">
+                    Class & Fees Structure
+                  </h1>
+                  <div
+                    onClick={() => {
+                      closeregistration();
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div>
+                <div className="w-[90%] flex flex-col md:flex-row  items-center  m-[.5rem]">
+                  <label className="text-[#ff5001] w-[50%] text-[1.2rem]">Select Branch :</label>
+                  <div className="w-full md:w-[48%]">
+                    <SelectInput
+                      id="branch"
+                      name="branch"
+                      options={branchOptions}
+                      required
+                      value={inputs.branch}
+                      onChange={(e) => {
+                        setPackageSelect(1), handleInput(e);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  {branchSelected ? (
+                    <>
+                      <div className="w-full flex justify-center items-center">
+                        <div
+                          className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
+                          onClick={prevImage}
+                        >
+                          <IoMdArrowRoundBack />
+                        </div>
+                        <div className="w-[70%] my-2">
+                          <Image
+                            src={browsher[currentImageIndex].refBroLink}
+                            alt="Image"
+                            preview
+                            className="w-[90%] md:w-[40%]"
+                          />
+                        </div>
+                        <div
+                          className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
+                          onClick={nextImage}
+                        >
+                          <IoMdArrowRoundForward />
+                        </div>
+                      </div>
+                    </>
+                  ) : null}
+                </div>
 
-          <button
-            type="submit"
-            className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
-          >
-            Next&nbsp;&nbsp;
-            <i className="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      </>
-    ) : null}
-  </div>
-  </div>
- 
-</form>
+                <hr />
+                <div className="bg-white">
+                  {branchSelected ? (
+                    <>
+                      <hr />
+                      <div className="w-[90%] lg:w-[95%] h-[10vh] flex justify-between items-center">
+                        <div className="flex flex-row ">
+                          <div className="card flex justify-content-center  ">
+                            <Checkbox required variant="filled" onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
+                          </div>
+                          <label
+                            className="cursor-pointer w-full text-start pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
+                          >
+                            I Understand the Fees Structure & Class Timing
+                          </label>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
+                        >
+                          Next&nbsp;&nbsp;
+                          <i className="fa-solid fa-arrow-right"></i>
+                        </button>
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+
+            </form>
 
           </>
         )}
@@ -1203,7 +1203,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   >
                     Use Same Number
                   </div>
-                
+
                 </div>
 
                 <div
@@ -1233,17 +1233,17 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     />
                   </div>
                   <div className="w-[48%]" align="start">
-                  <TextInput
-                    id="father"
-                    type="text"
-                    name="caretakername"
-                    placeholder="your name"
-                    label="Emergency Contact Name & Relationship*"
-                    required
-                    value={inputs.caretakername}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
+                    <TextInput
+                      id="father"
+                      type="text"
+                      name="caretakername"
+                      placeholder="your name"
+                      label="Emergency Contact Name & Relationship*"
+                      required
+                      value={inputs.caretakername}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
                 </div>
 
                 <div
@@ -1296,27 +1296,27 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     />
                   </div>
                   <div
-                  className="w-[30%]  flex justify-between"
-                  align="start"
-                >
-                  <SelectInput
-                    id="gender"
-                    name="gender"
-                    label="Gender *"
-                    options={[
-                      { value: "male", label: "Male" },
-                      { value: "female", label: "Female" },
-                      { value: "notperfer", label: "Not Perfer to say" },
-                    ]}
-                    required
-                    value={inputs.gender}
-                    onChange={(e) => handleInput(e)}
-                  />
-                </div>
+                    className="w-[30%]  flex justify-between"
+                    align="start"
+                  >
+                    <SelectInput
+                      id="gender"
+                      name="gender"
+                      label="Gender *"
+                      options={[
+                        { value: "male", label: "Male" },
+                        { value: "female", label: "Female" },
+                        { value: "notperfer", label: "Not Perfer to say" },
+                      ]}
+                      required
+                      value={inputs.gender}
+                      onChange={(e) => handleInput(e)}
+                    />
+                  </div>
 
                 </div>
 
-              
+
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
                   align="start"
@@ -1380,8 +1380,8 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="number"
                       required
                       disabled={
-                        (inputs.gender === "female" ? false : true) ||
-                        (inputs.maritalstatus === "married" ? false : true)
+                       
+                        inputs.maritalstatus === "married" ? false : true
                       }
                       value={inputs.kidsCount}
                       onChange={(e) => handleInput(e)}
@@ -1409,7 +1409,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                   </div>
                 </div>
 
-             
+
 
                 <div
                   className="w-[90%] mb-[20px] flex justify-between"
@@ -2333,6 +2333,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       name="backpain"
                       selectedOption={selectedOption.backpain || ""}
                       onChange={(e) => {
+                        let updatedInputs = {
+                          ...inputs,
+                          painscale: "",
+                          painscaleValue: ""
+                        };
+                        setInputs(updatedInputs);
                         setSelectedOption({
                           ...selectedOption,
                           backpain: e.target.value, // Corrected: updating backpain instead of care
@@ -2347,6 +2353,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       name="backpain"
                       selectedOption={selectedOption.backpain || ""}
                       onChange={(e) => {
+                        let updatedInputs = {
+                          ...inputs,
+                          painscale: "",
+                          painscaleValue: ""
+                        };
+                        setInputs(updatedInputs);
                         setSelectedOption({
                           ...selectedOption,
                           backpain: e.target.value, // Corrected: updating backpain instead of care
@@ -2401,6 +2413,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
                       onChange={(e) => {
+                        let updatedInputs = {
+                          ...inputs,
+                          bp: "",
+                          bpValue: ""
+                        };
+                        setInputs(updatedInputs);
                         setSelectedOption({
                           ...selectedOption,
                           bp: e.target.value, // Corrected: updating backpain instead of care
@@ -2416,6 +2434,12 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       name="bp"
                       selectedOption={selectedOption.bp || ""}
                       onChange={(e) => {
+                        let updatedInputs = {
+                          ...inputs,
+                          bpValue: "",
+                          bp: ""
+                        };
+                        setInputs(updatedInputs);
                         setSelectedOption({
                           ...selectedOption,
                           bp: e.target.value, // Corrected: updating backpain instead of care
@@ -2445,7 +2469,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       <TextInput
                         id="bp"
                         name="bpValue"
-                        label="BP Value (120/80)"
+                        label="BP Value (120/80) *"
                         disabled={selectedOption.bp === "yes" ? false : true}
                         required
                         value={inputs.bpValue}

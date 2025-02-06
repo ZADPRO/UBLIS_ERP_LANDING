@@ -512,13 +512,14 @@ const Landingprofile = () => {
         console.log("generalHealth line -------- 478", generalHealth);
         const presentHealth = data.data.presentHealth;
         console.log("presentHealth####------------------>", presentHealth);
-
+        console.log(' -> Line Number ----------------------------------- 515',);
+        console.log('presentHealth.refBackPain', presentHealth.refBackPain)
         setOptions({
           address: addressData ? addressData.addresstype : false,
           accident: generalHealth ? generalHealth.refRecentFractures : false,
           breaks: generalHealth ? generalHealth.refRecentFractures : false,
           care: presentHealth ? presentHealth.refUnderPhysicalCare : false,
-          backpain: presentHealth ? presentHealth.refBackPain !== "no" : false,
+          backpain: presentHealth.refBackPain === "No" ? false : true,
           ifbp: generalHealth.refIfBP,
           medicalIssue: personalData.refHealthIssue,
         });
@@ -590,9 +591,9 @@ const Landingprofile = () => {
             : null,
           caredoctorname: presentHealth ? presentHealth.refDoctor : null,
           caredoctorhospital: presentHealth ? presentHealth.refHospital : null,
-          backpainscale: presentHealth ? presentHealth.refBackPain : null,
+          backpainscale: presentHealth.refBackPain === "No" ? null : presentHealth.refBackPain,
           BackPainValue: presentHealth ? presentHealth.refBackPainValue : null,
-          ifbp: presentHealth ? generalHealth.refIfBp : null,
+          // ifbp: presentHealth ? generalHealth.refIfBp : null,
           bpValue: presentHealth ? generalHealth.refBP : null,
           bp: presentHealth ? generalHealth.refBpType : null,
           therapydurationproblem: presentHealth
@@ -644,10 +645,10 @@ const Landingprofile = () => {
       {
         refStId: "",
         presentHealth: {
-          refIfBp: inputs.ifbp,
+          refIfBP: options.ifbp,
           refBP: inputs.bpValue,
           refBpType: inputs.bp,
-          refBackpain: inputs.backpainscale,
+          refBackpain: inputs.backpainscale === "no" ? "No" : inputs.backpainscale,
           refBackPainValue: inputs.BackPainValue,
           refDrName: inputs.caredoctorname,
           refHospital: inputs.caredoctorhospital,
@@ -1009,7 +1010,7 @@ const Landingprofile = () => {
           refRecentFracturesReason: inputs.breaksdetails,
           refOthers: inputs.breaksotheractivities,
           refElse: inputs.genderalanything,
-          refBackpain: inputs.backpainscale,
+          refBackpain: inputs.backpainscale === "no" ? "No" : inputs.backpainscale,
           refBackPainValue: inputs.BackPainValue,
           refDrName: inputs.caredoctorname,
           refHospital: inputs.caredoctorhospital,
@@ -2281,7 +2282,7 @@ const Landingprofile = () => {
                   </div>
                   <div className="mt-2 text-[#ff621b] flex flex-row justify-center align-middle gap-5">
                     <p>
-                    <span className="text-xl">Note * :</span>  If you have any medical history, any medical
+                      <span className="text-xl">Note * :</span>  If you have any medical history, any medical
                       problems, or feel that you have any body pain or other
                       health issues, click 'Yes.' Otherwise, click 'No'.
                     </p>
@@ -2430,6 +2431,12 @@ const Landingprofile = () => {
                               label="Yes"
                               selectedOption={options.backpain ? "yes" : ""}
                               onChange={() => {
+                                let updatedInputs = {
+                                  ...inputs,
+                                  BackPainValue: "",
+                                  backpainscale: ""
+                                };
+                                setInputs(updatedInputs);
                                 setOptions({
                                   ...options,
                                   backpain: true,
@@ -2447,6 +2454,12 @@ const Landingprofile = () => {
                               label="No"
                               selectedOption={!options.backpain ? "no" : ""}
                               onChange={() => {
+                                let updatedInputs = {
+                                  ...inputs,
+                                  BackPainValue: "",
+                                  backpainscale: ""
+                                };
+                                setInputs(updatedInputs);
                                 setOptions({
                                   ...options,
                                   backpain: false,
@@ -2486,7 +2499,6 @@ const Landingprofile = () => {
                               disabled={!options.backpain}
                               readonly={!edits.present}
                               // disabled={!options.backpain || !edits.present}
-                              required
                               value={inputs.BackPainValue}
                               onChange={(e) => handleInput(e)}
                             />
@@ -2502,10 +2514,17 @@ const Landingprofile = () => {
                             <RadiobuttonInput
                               id="bpyes"
                               value="yes"
-                              name="bp"
+                              name="ifbp"
                               label="Yes"
                               selectedOption={options.ifbp ? "yes" : ""}
                               onChange={() => {
+                                let updatedInputs = {
+                                  ...inputs,
+                                  bpValue: "",
+                                  bp: ""
+                                };
+                                setInputs(updatedInputs);
+                                alert("true")
                                 setOptions({
                                   ...options,
                                   ifbp: true,
@@ -2519,10 +2538,17 @@ const Landingprofile = () => {
                             <RadiobuttonInput
                               id="bpno"
                               value="no"
-                              name="bp"
+                              name="ifbp"
                               label="No"
                               selectedOption={!options.ifbp ? "no" : ""}
                               onChange={() => {
+                                let updatedInputs = {
+                                  ...inputs,
+                                  bpValue: "",
+                                  bp: ""
+                                };
+                                setInputs(updatedInputs);
+                                alert("false")
                                 setOptions({
                                   ...options,
                                   ifbp: false,
