@@ -223,7 +223,7 @@ export default function Header() {
         }
       });
     }
-  }, [navigate, registrationmodal, isDropdownOpen]);
+  }, [navigate, registrationmodal]);
 
   // , [navigate]
 
