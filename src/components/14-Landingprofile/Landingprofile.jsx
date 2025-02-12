@@ -2527,7 +2527,7 @@ const Landingprofile = () => {
                                   bp: ""
                                 };
                                 setInputs(updatedInputs);
-                                alert("true")
+                                // alert("true")
                                 setOptions({
                                   ...options,
                                   ifbp: true,
@@ -2551,7 +2551,7 @@ const Landingprofile = () => {
                                   bp: ""
                                 };
                                 setInputs(updatedInputs);
-                                alert("false")
+                                // alert("false")
                                 setOptions({
                                   ...options,
                                   ifbp: false,
@@ -2833,12 +2833,12 @@ const Landingprofile = () => {
                     </div>
                   )}
                 </div>
-                {uploadDocuments.length > 0 ? (<><div className="text-gray-500 text-center mt-5">
-                  No Medical Documents Uploaded
-                </div></>
+                {uploadDocuments.length > 0 ? (<></>
 
                 ) : (
-                  <></>
+                  <><div className="text-gray-500 text-center mt-5">
+                  No Medical Documents Uploaded
+                </div></>
                 )}
                 {edits.medDoc ? (
                   <div className="w-full overflow-auto ">
