@@ -160,6 +160,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
 
   // useEffect to listen for changes in nextStepperValue
   useEffect(() => {
+
     if (nextStepperValue !== null) {
       setNewStepperValue(nextStepperValue);
     }
@@ -391,18 +392,18 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const [branchSelected, setBranchSelected] = useState(false)
 
 
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === browsher.length - 1 ? 0 : prevIndex + 1
-    );
+  const prevImage = () => {
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex((prevIndex) => prevIndex - 1);
+    }
   };
 
-  // Function to move to the previous image
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? browsher.length - 1 : prevIndex - 1
-    );
+  const nextImage = () => {
+    if (currentImageIndex < browsher.length - 1) {
+      setCurrentImageIndex((prevIndex) => prevIndex + 1);
+    }
   };
+
 
   const datePicker = (date) => {
     if (!date) return null; // Return null for invalid input
@@ -541,12 +542,10 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
         if (data.token == false) {
           navigate("/expired");
         }
-
-        console.log("-------------->", data);
+        localStorage.setItem("JWTtoken", "Bearer " + data.token + "");
 
         if (data.success) {
           const Dob = myFormatToDatePicker(data.data.ProfileData.dob);
-          localStorage.setItem("JWTtoken", "Bearer " + data.token + "");
           setBranchList(data.data.branchList);
           setInputs({
             ...inputs,
@@ -1023,11 +1022,13 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                     <>
                       <div className="w-full flex justify-center items-center">
                         <div
-                          className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
-                          onClick={prevImage}
+                          className={`w-auto text-[2rem] text-white ${currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                            } bg-[#ff5001] rounded-full border-none p-1`}
+                          onClick={currentImageIndex > 0 ? prevImage : undefined}
                         >
                           <IoMdArrowRoundBack />
                         </div>
+
                         <div className="w-[70%] my-2">
                           <Image
                             src={browsher[currentImageIndex].refBroLink}
@@ -1036,13 +1037,16 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                             className="w-[90%] md:w-[40%]"
                           />
                         </div>
+
                         <div
-                          className="w-auto text-[2rem] text-white bg-[#ff5001] rounded-full border-none p-1"
-                          onClick={nextImage}
+                          className={`w-auto text-[2rem] text-white ${currentImageIndex === browsher.length - 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                            } bg-[#ff5001] rounded-full border-none p-1`}
+                          onClick={currentImageIndex < browsher.length - 1 ? nextImage : undefined}
                         >
                           <IoMdArrowRoundForward />
                         </div>
                       </div>
+
                     </>
                   ) : null}
                 </div>
@@ -1380,7 +1384,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="number"
                       required
                       disabled={
-                       
+
                         inputs.maritalstatus === "married" ? false : true
                       }
                       value={inputs.kidsCount}
@@ -2395,7 +2399,6 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                         disabled={
                           selectedOption.backpain === "yes" ? false : true
                         }
-                        required
                         value={inputs.painscaleValue}
                         onChange={(e) => handleInput(e)}
                       />
