@@ -7,6 +7,7 @@ import CheckboxInput from "../Inputs/CheckboxInput";
 import RadioButton from "../Inputs/RadiobuttonInput";
 // import RadiobuttonInput from "../Inputs/RadiobuttonInput";
 import TextLabel from "../Labels/TextLabel";
+import { MdOutlineVerifiedUser } from "react-icons/md";
 import Axios from "axios";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import { ImUpload2 } from "react-icons/im";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { Calendar } from "primereact/calendar";
+import withReactContent from "sweetalert2-react-content";
 import RadiobuttonInput from "../Inputs/RadiobuttonInput";
 import { Input } from "postcss";
 import { LuCalendarClock } from "react-icons/lu";
@@ -24,6 +26,7 @@ import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Image } from 'primereact/image';
 import { Checkbox } from "primereact/checkbox";
+import PrintPDF from "../PrintPDF/PrintPDF";
 
 const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const navigate = useNavigate();
@@ -34,7 +37,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   const [options, setOptions] = useState({
     medicalIssue: false,
   });
-
+  const MySwal = withReactContent(Swal);
 
   let today = new Date();
   let month = today.getMonth();
@@ -783,150 +786,300 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
   };
 
   function calculateBMI(weight, height) {
-    // Convert height from cm to meters
     let heightInMeters = height / 100;
-
-    // Calculate BMI
     let bmi = weight / heightInMeters ** 2;
-
-    // Return the BMI rounded to two decimal places
     return bmi.toFixed(2);
   }
 
-  const submitForm = () => {
-    let updatedHealthProblem = [];
+  // const paymentToBackend = async (transactionId, amountPaid) => {
 
-    // console.log("uploadDocuments line ------------- 557", uploadDocuments);
-    conditions.forEach((element) => {
-      if (element.checked === 1) {
-        updatedHealthProblem.push(element.value);
-      }
+  //   try {
+  //     const requestData = {
+  //       refTransId: transactionId,
+  //       refFeesType: 1,
+  //       refFeesPaid: 300,
+  //       refCollectedBy: null,
+  //       refPayStatus: true,
+  //       refPaymentCharge: 0,
+  //       refOnlineCashAmt: 300,
+  //       refOfflineCashAmt: 0,
+  //       refPaymentMethod: "Online",
+  //       refPackage: "Registration Fees",
+  //       refPayFrom: null,
+  //       refPayTo: null,
+  //       refPagExp: null,
+  //       refOffId: null,
+  //       refOffType: null,
+  //       refPagFees: 300,
+  //       refTotalClassCount: 0,
+  //       refPayTyId: 1,
+  //       refCustomClass: false,
+  //       refClimedFreeCourse: 0,
+  //     };
+
+  //     console.log('requestData line ----- 818', requestData)
+  //     const response = await Axios.post(
+  //       import.meta.env.VITE_API_URL + "/userPayment/newPayment",
+  //       requestData,
+  //       {
+  //         headers: {
+  //           Authorization: localStorage.getItem("JWTtoken"),
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     const data = decrypt(
+  //       response.data[1],
+  //       response.data[0],
+  //       import.meta.env.VITE_ENCRYPTION_KEY
+  //     );
+
+  //     if (data.success) {
+  //       console.log("Payment success", data);
+  //       setOrderId(data.orderId)
+  //     } else {
+  //       setCouponMessage("Payment store failed");
+  //     }
+
+  //     if (data.token === false) {
+  //       navigate("/expired");
+  //       return;
+  //     }
+
+  //     localStorage.setItem("JWTtoken", "Bearer " + data.token);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  const payment = async () => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: 300 * 100,
+        currency: "INR",
+        name: "Ublisyoga",
+        description: "Payment for Registration",
+        handler: function (response) {
+          if (response.razorpay_payment_id) {
+            // paymentToBackend(response.razorpay_payment_id, 300);
+            resolve({
+              transactionId: response.razorpay_payment_id,
+              status: "success",
+            });
+          } else {
+            reject({
+              transactionId: response.razorpay_payment_id,
+              status: "failed",
+            });
+          }
+        },
+        prefill: {
+          name: `${inputs.fname} ${inputs.lname}`,
+          email: inputs.email,
+          contact: inputs.phoneno,
+        },
+        method: {
+          upi: true,
+          card: false,
+          netbanking: true,
+          wallet: true,
+        },
+        theme: {
+          color: "#f95005",
+        },
+        modal: {
+          escape: false,
+          ondismiss: function () {
+            reject({
+              transactionId: null,
+              status: "failed",
+            });
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     });
-    setLoading(true);
-    const Dob = datePickerToMyFormat(inputs.dob);
+  };
 
-    Axios.post(
-      import.meta.env.VITE_API_URL + "profile/RegisterData",
+  const [refTransId, setRefTransId] = useState()
 
-      {
-        address: {
-          addresstype: inputs.addressboth,
-          refAdFlat1: inputs.perdoorno,
-          refAdArea1: inputs.perstreetname,
-          refAdAdd1: inputs.peraddress,
+  const submitForm = async () => {
 
-          refAdCity1: inputs.percity,
-          refAdState1: State.getStateByCode(inputs.perstate).name,
-          refAdPincode1: parseInt(inputs.perpincode),
-          refAdFlat2: inputs.tempdoorno,
-          refAdAred2: inputs.tempstreetname,
-          refAdAdd2: inputs.tempaddess,
+    try {
+      const paymentResult = await payment();
+      console.log('paymentResult line ---- 909', paymentResult)
+      console.log('paymentResult line ----- 910 ', paymentResult.transactionId)
 
-          refAdCity2: inputs.tempcity,
-          refAdState2: State.getStateByCode(inputs.tempstate).name,
-          refAdPincode2: parseInt(inputs.tempincode),
-        },
-        MedicalDocuments: { uploadDocuments },
-        personalData: {
-          ref_su_fname: inputs.fname,
-          ref_su_lname: inputs.lname,
-          ref_su_mailid: inputs.email,
-          ref_su_phoneno: inputs.phoneno,
-          ref_su_emgContaxt: inputs.emgContaxt,
-          ref_su_Whatsapp: inputs.whatsappno,
-          ref_su_dob: Dob,
-          ref_su_age: inputs.age,
-          ref_su_gender: inputs.gender,
-          ref_su_qulify: inputs.qualification,
-          ref_su_occu: inputs.occupation,
-          ref_su_guardian: inputs.caretakername,
-          ref_su_branchId: parseInt(inputs.branch),
-          ref_Batch_Id: parseInt(inputs.memberlist),
-          ref_Weekend_Timing: parseInt(inputs.weekDaysTiming),
-          ref_Weekdays_Timing: parseInt(inputs.weekEndTiming),
-          ref_HealthIssue: options.medicalIssue,
-          ref_Package_Id: parseInt(inputs.sessiontype), // 
-          ref_su_MaritalStatus: inputs.maritalstatus,
-          ref_su_kidsCount: parseInt(inputs.kidsCount),
-          ref_su_WeddingDate: inputs.anniversarydate
-            ? datePickerToMyFormat(inputs.anniversarydate)
-            : null,
-          ref_su_deliveryType: inputs.deliveryType ? inputs.deliveryType : null,
 
-          ref_su_communicationPreference: parseInt(inputs.mode),
-          ref_Class_Mode: parseInt(inputs.classtype), //
-          ref_Session_From: inputs.monthStart
-            ? datePickerToMyFormat(inputs.monthStart)
-            : null,
-          ref_Session_To: inputs.monthEnd
-            ? datePickerToMyFormat(inputs.monthEnd)
-            : null,
-        },
-        generalhealth: {
-          refHeight: parseInt(inputs.height),
-          refWeight: parseInt(inputs.weight),
-          refBlood: inputs.bloodgroup,
-          refBMI: inputs.bmi,
 
-          refRecentInjuries: selectedOption.accident === "yes" ? true : false,
-          refRecentInjuriesReason: inputs.injuries,
-          refRecentFractures: selectedOption.breaks === "yes" ? true : false,
-          refRecentFracturesReason: inputs.breaks,
-          refOthers: inputs.activities,
-          refElse: inputs.anthingelse,
-          refOtherActivities: inputs.others,
-          refPresentHealth: updatedHealthProblem,
-          refMedicalDetails: inputs.medicaldetails,
-          refUnderPhysicalCare: selectedOption.care === "yes" ? true : false,
-          refDoctor: inputs.doctorname,
-          refHospital: inputs.hospitalname,
-          refBackPain:
-            selectedOption.backpain === "no" ? "No" : inputs.painscale,
-          refIfBp: selectedOption.bp === "" ? false : selectedOption.bp,
-          refBackPainValue: inputs.painscaleValue,
-          refBpType: inputs.bp,
-          refBP: inputs.bpValue,
-          refProblem: inputs.duration,
-          refPastHistory: inputs.past,
-          refFamilyHistory: inputs.family,
-          refAnythingelse: inputs.therapyanything,
-        },
-      },
-      {
-        headers: {
-          Authorization: localStorage.getItem("JWTtoken"),
-          "Content-Type": "application/json", // Ensure the content type is set
-        },
-      }
-    )
-      .then((res) => {
-        const data = decrypt(
-          res.data[1],
-          res.data[0],
-          import.meta.env.VITE_ENCRYPTION_KEY
-        );
+      let updatedHealthProblem = [];
 
-        console.log(data.success);
-
-        if (data.success) {
-          navigate("/");
-          handlecloseregister();
-          closeregistration();
-          swal({
-            title: "Registration Completed!",
-            text: "Your registration was successful! Our team will contact you shortly.",
-            icon: "success",
-            customClass: {
-              title: "swal-title",
-              content: "swal-text",
-            },
-          });
+      conditions.forEach((element) => {
+        if (element.checked === 1) {
+          updatedHealthProblem.push(element.value);
         }
-      })
-      .catch((err) => {
-        // Catching any 400 status or general errors
-        console.log("Error: ", err);
       });
+      setLoading(true);
+      const Dob = datePickerToMyFormat(inputs.dob);
+
+      Axios.post(
+        import.meta.env.VITE_API_URL + "profile/RegisterData",
+
+        {
+          address: {
+            addresstype: inputs.addressboth,
+            refAdFlat1: inputs.perdoorno,
+            refAdArea1: inputs.perstreetname,
+            refAdAdd1: inputs.peraddress,
+
+            refAdCity1: inputs.percity,
+            refAdState1: State.getStateByCode(inputs.perstate).name,
+            refAdPincode1: parseInt(inputs.perpincode),
+            refAdFlat2: inputs.tempdoorno,
+            refAdAred2: inputs.tempstreetname,
+            refAdAdd2: inputs.tempaddess,
+
+            refAdCity2: inputs.tempcity,
+            refAdState2: State.getStateByCode(inputs.tempstate).name,
+            refAdPincode2: parseInt(inputs.tempincode),
+          },
+          MedicalDocuments: { uploadDocuments },
+          personalData: {
+            ref_su_fname: inputs.fname,
+            ref_su_lname: inputs.lname,
+            ref_su_mailid: inputs.email,
+            ref_su_phoneno: inputs.phoneno,
+            ref_su_emgContaxt: inputs.emgContaxt,
+            ref_su_Whatsapp: inputs.whatsappno,
+            ref_su_dob: Dob,
+            ref_su_age: inputs.age,
+            ref_su_gender: inputs.gender,
+            ref_su_qulify: inputs.qualification,
+            ref_su_occu: inputs.occupation,
+            ref_su_guardian: inputs.caretakername,
+            ref_su_branchId: parseInt(inputs.branch),
+            ref_Batch_Id: parseInt(inputs.memberlist),
+            ref_Weekend_Timing: parseInt(inputs.weekDaysTiming),
+            ref_Weekdays_Timing: parseInt(inputs.weekEndTiming),
+            ref_HealthIssue: options.medicalIssue,
+            ref_Package_Id: parseInt(inputs.sessiontype), // 
+            ref_su_MaritalStatus: inputs.maritalstatus,
+            ref_su_kidsCount: parseInt(inputs.kidsCount),
+            ref_su_WeddingDate: inputs.anniversarydate
+              ? datePickerToMyFormat(inputs.anniversarydate)
+              : null,
+            ref_su_deliveryType: inputs.deliveryType ? inputs.deliveryType : null,
+
+            ref_su_communicationPreference: parseInt(inputs.mode),
+            ref_Class_Mode: parseInt(inputs.classtype), //
+            ref_Session_From: inputs.monthStart
+              ? datePickerToMyFormat(inputs.monthStart)
+              : null,
+            ref_Session_To: inputs.monthEnd
+              ? datePickerToMyFormat(inputs.monthEnd)
+              : null,
+          },
+          generalhealth: {
+            refHeight: parseInt(inputs.height),
+            refWeight: parseInt(inputs.weight),
+            refBlood: inputs.bloodgroup,
+            refBMI: inputs.bmi,
+
+            refRecentInjuries: selectedOption.accident === "yes" ? true : false,
+            refRecentInjuriesReason: inputs.injuries,
+            refRecentFractures: selectedOption.breaks === "yes" ? true : false,
+            refRecentFracturesReason: inputs.breaks,
+            refOthers: inputs.activities,
+            refElse: inputs.anthingelse,
+            refOtherActivities: inputs.others,
+            refPresentHealth: updatedHealthProblem,
+            refMedicalDetails: inputs.medicaldetails,
+            refUnderPhysicalCare: selectedOption.care === "yes" ? true : false,
+            refDoctor: inputs.doctorname,
+            refHospital: inputs.hospitalname,
+            refBackPain:
+              selectedOption.backpain === "no" ? "No" : inputs.painscale,
+            refIfBp: selectedOption.bp === "" ? false : selectedOption.bp,
+            refBackPainValue: inputs.painscaleValue,
+            refBpType: inputs.bp,
+            refBP: inputs.bpValue,
+            refProblem: inputs.duration,
+            refPastHistory: inputs.past,
+            refFamilyHistory: inputs.family,
+            refAnythingelse: inputs.therapyanything,
+          },
+          Payment:
+          {
+            refTransId: paymentResult.transactionId,
+            refFeesType: 1,
+            refFeesPaid: 300,
+            refCollectedBy: null,
+            refPayStatus: true,
+            refPaymentCharge: 0,
+            refOnlineCashAmt: 300,
+            refOfflineCashAmt: 0,
+            refPaymentMethod: "Online",
+            refPackage: "Registration Fees",
+            refPayFrom: null,
+            refPayTo: null,
+            refPagExp: null,
+            refOffId: null,
+            refOffType: null,
+            refPagFees: 255,
+            refTotalClassCount: [0],
+            refPayTyId: 1,
+            refCustomClass: false,
+            refClimedFreeCourse: false,
+          }
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("JWTtoken"),
+            "Content-Type": "application/json", // Ensure the content type is set
+          },
+        }
+      )
+        .then((res) => {
+          const data = decrypt(
+            res.data[1],
+            res.data[0],
+            import.meta.env.VITE_ENCRYPTION_KEY
+          );
+
+          console.log('data line ------- 1045', data)
+          console.log(data.success);
+          const orderId = data.orderId
+          setRefTransId(orderId)
+          console.log('orderId line ---- 1053', orderId)
+
+          if (data.success) {
+            /* navigate("/"); */
+            // handlecloseregister();
+            // closeregistration();
+            // swal({
+            //   title: "Registration Completed!",
+            //   text: "Your registration was successful! Our team will contact you shortly.",
+            //   icon: "success",
+            //   customClass: {
+            //     title: "swal-title",
+            //     content: "swal-text",
+            //   },
+            // });
+
+            setStepperactive((prev) => (prev < 8 ? prev + 1 : prev));
+          }
+
+        })
+        .catch((err) => {
+          console.log("Error: ", err);
+        });
+    } catch (error) {
+      console.error("Payment Failed:", error);
+    }
   };
 
   function myFormatToDatePicker(dateString) {
@@ -980,6 +1133,7 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
       >
         {stepperactive === 1 && (
           <>
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -3025,13 +3179,38 @@ const RegistrationStepper = ({ closeregistration, handlecloseregister }) => {
                       type="submit"
                       className="disabled:bg-[#ff7a3c] disabled:font-[#fff] disabled:hover:cursor-not-allowed disabled:hover:text-[#fff] disabled:border-[#ff7a3c] bg-[#ff5001] border-2 border-[#ff5001] text-[#fff] font-semibold px-3 py-2 rounded transition-colors duration-300 ease-in-out hover:bg-[#fff] hover:text-[#ff5001]"
                     >
-                      Register&nbsp;&nbsp;
+                      Pay to Register&nbsp;&nbsp;
                       <i class="fa-solid fa-check"></i>
                     </button>
                   </>
                 )}
               </div>
             </form>
+          </>
+        )}
+        {stepperactive === 8 && (
+          <>
+            <div className="w-full h-[7vh] flex justify-center items-center">
+              <div className="w-[90%] justify-end flex h-[7vh] items-center">
+
+                <div
+                  onClick={() => {
+                    closeregistration();
+                  }}
+                >
+
+                  <i className="fa-solid fa-xmark text-[20px] cursor-pointer"></i>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className="flex flex-col justify-center align-items-center w-[100%] h-[100%]">
+              <p><b className="text-[1.8rem] text-[#f95005]">Registered Successfully</b></p>
+
+              <MdOutlineVerifiedUser size={"10rem"} color="green" />
+              <p className="m-3">Our team will contact you shortly </p>
+                <PrintPDF refOrderId={refTransId} />
+            </div>
           </>
         )}
       </div>

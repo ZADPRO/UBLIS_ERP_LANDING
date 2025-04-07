@@ -92,15 +92,12 @@ export default function SignIn() {
         if (data.success) {
           const refUtIdValue = data.data.refUtId[0].refUtId;
           if (data.data.refUtId && data.data.refUtId.length > 0) {
-            console.log(refUtIdValue); // This will output: 4
+            console.log(refUtIdValue); 
           } else {
             console.error("refUtId is undefined or empty");
           }
 
           localStorage.setItem("JWTtoken", "Bearer " + data.token + "");
-
-          // Check if refUtId exists and retrieve its value
-
           console.log("refUtIdValue:", refUtIdValue);
 
           if (
@@ -111,7 +108,8 @@ export default function SignIn() {
           ) {
             navigate("/");
             localStorage.setItem("ublisYogaRegistration", true);
-          } else {
+          } 
+          else {
             const jwtToken = localStorage.getItem("JWTtoken");
             setLoading(false);
 
@@ -143,7 +141,8 @@ export default function SignIn() {
               console.error("JWTtoken or refUtIdValue is null.");
             }
           }
-        } else {
+        } 
+        else {
           setLoading(false);
 
           setErrorStatus({
