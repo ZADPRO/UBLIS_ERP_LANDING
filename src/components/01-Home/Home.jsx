@@ -97,7 +97,7 @@ export default function Home() {
   return (
     <div className="homeContainer welcomeContent">
 
-      
+
       <div className="contentContainer">
         <div className="contentSection ">
           <h1 data-aos="fade-in" data-aos-delay="200">
@@ -482,6 +482,7 @@ export default function Home() {
           </button>
         </div>
       </div>
+
     </div>
   );
 }

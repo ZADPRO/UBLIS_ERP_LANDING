@@ -288,7 +288,7 @@ export const Stepper = () => {
 
   const [formerror2, setFormerror2] = useState({
     errorstatus: false,
-    errorstatus:"",
+    errorstatus: "",
   });
 
   const submitform2 = () => {
@@ -299,9 +299,9 @@ export const Stepper = () => {
       });
       return; // Stop the form submission
     }
-  
+
     setSubmitloadingStatus(true);
-  
+
     const Dob = datePickerToMyFormat(input.dob);
     Axios.post(import.meta.env.VITE_API_URL + "users/signup", {
       temp_su_fname: input.fname,
@@ -319,7 +319,7 @@ export const Stepper = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
-  
+
         if (data.success) {
           setSuccessState(true);
           setTimeout(() => {
@@ -343,7 +343,7 @@ export const Stepper = () => {
         });
       });
   };
-  
+
 
   const isPasswordValid = input.password.length >= 8;
   const hasUppercase = /[A-Z]/.test(input.password);
@@ -352,9 +352,8 @@ export const Stepper = () => {
 
   const CircleIcon = ({ isValid }) => (
     <span
-      className={`w h-5 inline-flex items-center justify-center rounded-full text-white text-xs font-bold ${
-         isValid ? "bg-white" : "bg-white"
-      }`}
+      className={`w h-5 inline-flex items-center justify-center rounded-full text-white text-xs font-bold ${isValid ? "bg-white" : "bg-white"
+        }`}
     >
       {isValid ? (
         <span className="text-green-500">( ✔ )</span> // Green checkmark
@@ -459,7 +458,7 @@ export const Stepper = () => {
                       onChange={handleinput}
                     /> */}
                     <UsernameInput
-                  
+
                       id="email"
                       name="email"
                       label="Email"
@@ -468,8 +467,8 @@ export const Stepper = () => {
                       required
                       isInvalid={emailVerify}
                       style={{ paddingTop: "4px" }}
-                     
-                      />
+
+                    />
                   </div>
                 </div>
               </div>
@@ -564,7 +563,7 @@ export const Stepper = () => {
                       helperText="Password should be at least 8 characters."
                       maxLength={30}
                     />
-                     
+
                   </div>
                 </div>
               </div>
@@ -585,29 +584,29 @@ export const Stepper = () => {
                 </div>
               </div>
               <div>
-            
+
               </div>
               <div className="w-[100%]" align="center">
                 <div className="w-[90%] lg:w-[80%] flex justify-between">
                   <div className="w-[100%] mt-3 " align="start">
-                  <p className="flex items-center gap-2">
-                <CircleIcon isValid={isPasswordValid} /> At least 8 characters
-              </p>
-              <p className="flex items-center gap-2">
-                <CircleIcon isValid={hasUppercase } />  At least one uppercase letter
-              </p>
-              <p className="flex items-center gap-2">
-                <CircleIcon isValid={hasSpecialChar } /> At least one special character
-              </p>
-              <p className="flex items-center gap-2">
-                <CircleIcon isValid={isPasswordMatch } /> Passwords must match
-              </p>
-              </div></div>
-            
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={isPasswordValid} /> At least 8 characters
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={hasUppercase} />  At least one uppercase letter
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={hasSpecialChar} /> At least one special character
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <CircleIcon isValid={isPasswordMatch} /> Passwords must match
+                    </p>
+                  </div></div>
+
+              </div>
+
             </div>
-              
-            </div>
-          
+
             <div className="w-full mt-5 flex justify-center font-semibold">
               <div className="w-[90%] lg:w-[80%] text-center transition-all duration-300">
                 {formerror2.errorstatus ? (
@@ -668,6 +667,15 @@ export const Stepper = () => {
             </div>
           </>
         )}
+      </div>
+      <div className="flex w-full justify-center">
+        <p className="text-[2rem] text-[#f95005]">.env File Data</p>
+        <ul>
+          {Object.entries(import.meta.env).map(([key, value]) => (
+            <li key={key}>{key}: {value}</li>
+          ))}
+        </ul>
+
       </div>
     </div>
   );
