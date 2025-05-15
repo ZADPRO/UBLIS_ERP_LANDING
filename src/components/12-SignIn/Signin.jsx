@@ -92,7 +92,7 @@ export default function SignIn() {
         if (data.success) {
           const refUtIdValue = data.data.refUtId[0].refUtId;
           if (data.data.refUtId && data.data.refUtId.length > 0) {
-            console.log(refUtIdValue); 
+            console.log(refUtIdValue);
           } else {
             console.error("refUtId is undefined or empty");
           }
@@ -108,7 +108,7 @@ export default function SignIn() {
           ) {
             navigate("/");
             localStorage.setItem("ublisYogaRegistration", true);
-          } 
+          }
           else {
             const jwtToken = localStorage.getItem("JWTtoken");
             setLoading(false);
@@ -121,19 +121,17 @@ export default function SignIn() {
             console.log("refUtIdValue----", refUtIdValue);
             if (jwtToken && refUtIdValue !== null) {
               if (refUtIdValue !== 5) {
-                const redirectUrl = `${
-                  import.meta.env.VITE_SUB_API
-                }?JWTtoken=${encodeURIComponent(
-                  jwtToken
-                )}&refUtId=${encodeURIComponent(refUtIdValue)}`;
+                const redirectUrl = `${import.meta.env.VITE_SUB_API
+                  }?JWTtoken=${encodeURIComponent(
+                    jwtToken
+                  )}&refUtId=${encodeURIComponent(refUtIdValue)}`;
                 window.open(redirectUrl, "_blank");
                 localStorage.removeItem("JWTtoken");
               } else {
-                const redirectUrl = `${
-                  import.meta.env.VITE_SUB_API
-                }/users/dashboard?JWTtoken=${encodeURIComponent(
-                  jwtToken
-                )}&refUtId=${encodeURIComponent(refUtIdValue)}`;
+                const redirectUrl = `${import.meta.env.VITE_SUB_API
+                  }/users/dashboard?JWTtoken=${encodeURIComponent(
+                    jwtToken
+                  )}&refUtId=${encodeURIComponent(refUtIdValue)}`;
                 window.open(redirectUrl, "_blank");
                 localStorage.removeItem("JWTtoken");
               }
@@ -141,7 +139,7 @@ export default function SignIn() {
               console.error("JWTtoken or refUtIdValue is null.");
             }
           }
-        } 
+        }
         else {
           setLoading(false);
 

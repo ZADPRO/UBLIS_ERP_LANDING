@@ -668,7 +668,7 @@ export const Stepper = () => {
           </>
         )}
       </div>
-      <div className="flex w-full justify-center">
+      {/* <div className="flex w-full justify-center">
         <p className="text-[2rem] text-[#f95005]">.env File Data</p>
         <ul>
           {Object.entries(import.meta.env).map(([key, value]) => (
@@ -676,7 +676,7 @@ export const Stepper = () => {
           ))}
         </ul>
 
-      </div>
+      </div> */}
     </div>
   );
 };
